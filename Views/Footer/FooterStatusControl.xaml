@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="MD.BRIDGE.Views.Footer.FooterStatusControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:MD.BRIDGE.ViewModels"
+             xmlns:properties="clr-namespace:MD.BRIDGE.Properties" 
+             Height="40">
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- 윗줄: 1px짜리 구분선 -->
+            <RowDefinition Height="Auto" />
+            <!-- 아랫줄: 나머지 전체를 차지(스타) -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- 상단 구분선 -->
+        <Border Grid.Row="0" Height="1" Background="#E0E0E0" />
+
+        <!-- 상태 및 버전 영역 -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- 왼쪽 -->
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="●"
+                           VerticalAlignment="Center"
+                           Margin="15,0,0,0"
+                           FontSize="12">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Gray"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Idle}">
+                                    <Setter Property="Foreground" Value="Gray"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
+                                    <Setter Property="Foreground" Value="Gray"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
+                                    <Setter Property="Foreground" Value="Green"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Error}">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBlock Text="{x:Static properties:Resources.Inline_Footer_ServerStatus}"
+                            Margin="12,0,0,0"
+                            FontSize="12"
+                            Foreground="Gray"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"/>
+                <TextBlock Text="{Binding FooterServerStatusText}"
+                            Margin="5,0,0,0"
+                            FontSize="12"
+                            Foreground="Gray"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"/>
+
+            </StackPanel>
+            
+            <!-- 오른쪽 -->
+            <TextBlock Margin="0,0,15,0"
+                       FontSize="12"
+                       Foreground="Gray"
+                       Grid.Column="1"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="builded {0}">
+                        <Binding Path="BuildVersionText"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>
