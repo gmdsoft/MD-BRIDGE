@@ -207,7 +207,7 @@ namespace MD.BRIDGE.ViewModels
         private void SetIdleState()
         {
             _taskbarIconService.SetTrayIcon("Assets/tray_waiting.png");
-            _taskbarIconService.UpdateToolTipMessage("");
+            _taskbarIconService.UpdateToolTipMessage(Resources.Tray_IdleMessage);
 
             ConnectionStatusDetailText = Resources.Inline_Connection_IdleMessage;
             FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;

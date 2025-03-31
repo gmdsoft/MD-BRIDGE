@@ -169,7 +169,7 @@
   <data name="Tray_Button_Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="Tray_NotConnectedMessage" xml:space="preserve">
+  <data name="Tray_IdleMessage" xml:space="preserve">
     <value>Not connected to the server.</value>
   </data>
   <data name="Tray_ConnectFailMessage" xml:space="preserve">

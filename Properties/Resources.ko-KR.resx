@@ -171,7 +171,7 @@
   <data name="Tray_ConnectingMessage" xml:space="preserve">
     <value>서버에 연결 중입니다.</value>
   </data>
-  <data name="Tray_NotConnectedMessage" xml:space="preserve">
+  <data name="Tray_IdleMessage" xml:space="preserve">
     <value>서버에 연결되어 있지 않습니다.</value>
   </data>
   <data name="Tray_ConnectFailMessage" xml:space="preserve">

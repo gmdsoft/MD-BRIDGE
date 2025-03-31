@@ -333,9 +333,9 @@ namespace MD.BRIDGE.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Not connected to the server..
         /// </summary>
-        public static string Tray_NotConnectedMessage {
+        public static string Tray_IdleMessage {
             get {
-                return ResourceManager.GetString("Tray_NotConnectedMessage", resourceCulture);
+                return ResourceManager.GetString("Tray_IdleMessage", resourceCulture);
             }
         }
     }
