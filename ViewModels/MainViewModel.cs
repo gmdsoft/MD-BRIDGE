@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using MD.BRIDGE.Services;
-using MD.BRIDGE.Utils;
 using MD.BRIDGE.Properties;
 using System.Globalization;
 using System.Threading;

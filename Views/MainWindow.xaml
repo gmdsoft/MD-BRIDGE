@@ -555,7 +555,7 @@
                                 <TextBlock FontSize="24" Foreground="Black" FontWeight="Bold" 
                                            TextAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="MD-VRIDGE {0}">
+                                        <MultiBinding StringFormat="MD-BRIDGE {0}">
                                             <Binding Path="BuildVersionText"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
