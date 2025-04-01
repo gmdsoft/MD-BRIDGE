@@ -167,7 +167,7 @@
     <value>Open</value>
   </data>
   <data name="Tray_Button_Exit" xml:space="preserve">
-    <value>Exit</value>
+    <value>Close</value>
   </data>
   <data name="Tray_IdleMessage" xml:space="preserve">
     <value>Not connected to the server.</value>
@@ -207,7 +207,7 @@
     <value>Server Connection</value>
   </data>
   <data name="Inline_Connection_IdleMessage" xml:space="preserve">
-    <value>ⓘ Please enter the server address and click the Connect button.</value>
+    <value>ⓘ Please enter the server address and click the connect button.</value>
   </data>
   <data name="Inline_Connection_ConnectingMessage" xml:space="preserve">
     <value>Please wait a moment.</value>

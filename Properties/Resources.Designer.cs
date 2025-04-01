@@ -169,7 +169,7 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⓘ Please enter the server address and click the Connect button..
+        ///   Looks up a localized string similar to ⓘ Please enter the server address and click the connect button..
         /// </summary>
         public static string Inline_Connection_IdleMessage {
             get {
@@ -286,7 +286,7 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exit.
+        ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Tray_Button_Exit {
             get {
