@@ -166,8 +166,8 @@ namespace MD.BRIDGE.Services
                 .Where(IsFileClosed) // 다른 프로세스가 사용하지 않는 로그파일 filter
                 .Where(filePath => new DateTimeOffset(File.GetLastWriteTimeUtc(filePath), TimeSpan.Zero).IsBetween(start, end));
 
-            await WebClientService.CompleteLogs(new WebClientService.CompleteLogRequest(
-                filenames: completedLogfilePaths.Select(filePath => Path.GetFileName(filePath))
+            await WebClientService.TerminateMonitoring(new WebClientService.TerminateMonitoringRequest(
+                fileNames: completedLogfilePaths.Select(filePath => Path.GetFileName(filePath))
             ));
         }
 

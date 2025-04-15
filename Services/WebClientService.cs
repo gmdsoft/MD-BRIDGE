@@ -17,7 +17,7 @@ namespace MD.BRIDGE.Services
             {
                 try
                 {
-                    HttpResponseMessage response = await httpClient.GetAsync("/api/v1/monitor-logs/ready");
+                    HttpResponseMessage response = await httpClient.GetAsync("/api/v1/monitoring/ready");
                     return response.IsSuccessStatusCode;
                 }
                 catch (Exception e)
@@ -40,7 +40,7 @@ namespace MD.BRIDGE.Services
                         "application/json"
                     );
 
-                    HttpResponseMessage response = await httpClient.PostAsync("/api/v1/monitor-logs", content);
+                    HttpResponseMessage response = await httpClient.PostAsync("/api/v1/monitoring/logs", content);
                     return response.IsSuccessStatusCode;
                 }
                 catch (Exception e)
@@ -51,7 +51,7 @@ namespace MD.BRIDGE.Services
             }
         }
 
-        public static async Task<bool> CompleteLogs(CompleteLogRequest request)
+        public static async Task<bool> TerminateMonitoring(TerminateMonitoringRequest request)
         {
             using (var httpClient = GetHttpClient())
             {
@@ -64,7 +64,7 @@ namespace MD.BRIDGE.Services
                         "application/json"
                     );
 
-                    HttpResponseMessage response = await httpClient.PostAsync("/api/v1/monitor-logs/complete", content);
+                    HttpResponseMessage response = await httpClient.PutAsync("/api/v1/monitoring/termination", content);
                     return response.IsSuccessStatusCode;
                 }
                 catch (Exception e)
@@ -103,13 +103,13 @@ namespace MD.BRIDGE.Services
             }
         }
 
-        public class CompleteLogRequest
+        public class TerminateMonitoringRequest
         {
-            [JsonProperty("filenames")]
-            public IEnumerable<string> Filenames { get; private set; }
-            public CompleteLogRequest(IEnumerable<string> filenames)
+            [JsonProperty("fileNames")]
+            public IEnumerable<string> FileNames { get; private set; }
+            public TerminateMonitoringRequest(IEnumerable<string> fileNames)
             {
-                Filenames = filenames;
+                FileNames = fileNames;
             }
         }
 
