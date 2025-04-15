@@ -4,6 +4,7 @@ using MD.BRIDGE.ViewModels;
 using MD.BRIDGE.Views;
 using Application = System.Windows.Application;
 using System.Threading;
+using System.Linq;
 
 namespace MD.BRIDGE
 {
@@ -23,7 +24,18 @@ namespace MD.BRIDGE
 
             base.OnStartup(e);
 
-            ShowMainWindow();
+            if (_window == null)
+            {
+                _window = new MainWindow();
+                _window.DataContext = new MainViewModel(new TaskbarIconService());
+            }
+
+            bool trayOnly = e.Args.Contains("--tray-only");
+
+            if(!trayOnly)
+            {
+                ShowMainWindow();
+            }
         }
 
         private void MenuItem_Open_Click(object sender, RoutedEventArgs e)
