@@ -12,7 +12,7 @@ namespace MD.BRIDGE.Services
     public static class SettingService
     {
         #region Default Values
-        public static string DefaultServerAddress { get; } = "http://127.0.0.1:8080";
+        public static string DefaultServerAddress { get; } = "http://172.16.3.82:8080";
 
         private static Dictionary<Product, string> _productLogDirectories
         {
