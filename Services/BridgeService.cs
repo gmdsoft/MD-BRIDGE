@@ -12,7 +12,6 @@ namespace MD.BRIDGE.Services
 {
     public class BridgeService
     {
-        private const string _mutexKey = "Global\\MD-BRIDGE";
         private TaskCompletionSource<bool> _completionSource;
         private CancellationTokenSource cts;
 
@@ -20,26 +19,10 @@ namespace MD.BRIDGE.Services
         {
             Task.Run(() =>
             {
-                using (var mutex = new Mutex(true, _mutexKey, out bool createdNew))
-                {
-                    if (!createdNew)
-                    {
-                        Console.WriteLine($"[{DateTimeOffset.Now}] Another Bridge is already running.");
-                        Environment.Exit(0);
-                    }
+                _completionSource = new TaskCompletionSource<bool>();
+                cts = new CancellationTokenSource();
 
-                    _completionSource = new TaskCompletionSource<bool>();
-                    cts = new CancellationTokenSource();
-
-                    try
-                    {
-                        RunTasksAsync().GetAwaiter().GetResult();
-                    }
-                    finally
-                    {
-                        mutex.ReleaseMutex();
-                    }
-                }
+                RunTasksAsync().GetAwaiter().GetResult();
             });
         }
 

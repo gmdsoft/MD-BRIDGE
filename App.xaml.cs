@@ -5,6 +5,8 @@ using MD.BRIDGE.Views;
 using Application = System.Windows.Application;
 using System.Threading;
 using System.Linq;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace MD.BRIDGE
 {
@@ -13,10 +15,22 @@ namespace MD.BRIDGE
     /// </summary>
     public partial class App : Application
     {
+        private const string _mutexKey = "Global\\MD-BRIDGE";
+        private static Mutex _mutex;
+
         private MainWindow _window;
 
         protected override void OnStartup(StartupEventArgs e)
         {
+
+            bool createdNew;
+            _mutex = new Mutex(true, _mutexKey, out createdNew);
+
+            if (!createdNew)
+            {
+                Environment.Exit(0);
+            }
+
             var cultureInfo = SettingService.GetCultureInfo();
 
             Thread.CurrentThread.CurrentCulture = cultureInfo;
@@ -32,10 +46,16 @@ namespace MD.BRIDGE
 
             bool trayOnly = e.Args.Contains("--tray-only");
 
-            if(!trayOnly)
+            if (!trayOnly)
             {
                 ShowMainWindow();
             }
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _mutex?.ReleaseMutex();
+            base.OnExit(e);
         }
 
         private void MenuItem_Open_Click(object sender, RoutedEventArgs e)
