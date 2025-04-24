@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DICTIONARY type="multilanguage">
+  <ENTRY id="ProgId.[|Manufacturer].[|ProductName].mdf">
+    <STRING lang="ko" value="MDF 파일"/>
+  </ENTRY>
+  <ENTRY id="ProgId.[|Manufacturer].[|ProductName].mrx">
+    <STRING lang="ko" value="MD-RED 사건 파일"/>
+  </ENTRY>
+</DICTIONARY>

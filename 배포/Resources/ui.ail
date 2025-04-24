@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DICTIONARY type="multilanguage" ignore="en">
+  <ENTRY id="ActionText.Description.AI_AiRemoveFilesDeferred_Permanent">
+    <STRING lang="en" value="Preparing files for removal"/>
+    <STRING lang="ko" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Description.AI_AiRemoveFilesDeferred_Undoable">
+    <STRING lang="en" value="Preparing files for removal"/>
+    <STRING lang="ko" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Description.AI_AiRemoveFilesRollback">
+    <STRING lang="en" value="Restoring removed files"/>
+    <STRING lang="ko" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Description.AI_ConfigureChainer">
+    <STRING lang="en" value="Configuring prerequisites launcher"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Template.AI_AiRemoveFilesDeferred_Permanent">
+    <STRING lang="en" value="Preparing file: [1]"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Template.AI_AiRemoveFilesDeferred_Undoable">
+    <STRING lang="en" value="Preparing file: [1]"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Template.AI_AiRemoveFilesImmediate">
+    <STRING lang="en" value="Preparing file: [1]"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Template.AI_AiRemoveFilesRollback">
+    <STRING lang="en" value="Restoring file: [1]"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="ActionText.Template.AI_ConfigureChainer">
+    <STRING lang="en" value="Configure Launcher"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Air.Control.Help#Back">
+    <STRING lang="en" value="Back|"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.CustomizeDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.ExitDialog#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.FilesInUse#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.LicenseAgreementDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.LicenseAgreementDlg#AgreementText">
+    <STRING lang="en" value=""/>
+    <STRING lang="ko" value="eula_ko.rtf"/>
+    <STRING lang="zh" value="eula_zh.rtf"/>
+  </ENTRY>
+  <ENTRY id="Control.Text.MaintenanceTypeDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.ProgressDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.UserExit#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.VerifyReadyDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.VerifyReadyDlg#Back">
+    <STRING lang="en" value="Control.Text.VerifyReadyDlg#Back"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.VerifyRemoveDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Control.Text.VerifyRepairDlg#AdvInst">
+    <STRING lang="en" value="Advanced Installer"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.ExtData.VerifyReadyDlg#InstallButton">
+    <STRING lang="en" value="INSTALL"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.ExtData.WelcomeDlg.BrowseTxt">
+    <STRING lang="en" value="..."/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.Text.AdminWelcomeDlg#Description">
+    <STRING lang="en" value="The [Wizard] will create a server image of [ProductName], at a specified network location.  Click &quot;[Text_Next]&quot; to continue or &quot;Cancel&quot; to exit the [Wizard]."/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.Text.ExitDialog#Readme">
+    <STRING lang="en" value="Readme"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.Text.ExitDialog#Run">
+    <STRING lang="en" value="Run"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.Text.Manufacturer">
+    <STRING lang="en" value="[Manufacturer]"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.Text.OutOfDiskDlg#Text">
+    <STRING lang="en" value="Not enough disk space on the highlighted volumes. Choose a different destination drive, remove some files or install less features."/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Metro.Control.Text.ProductName">
+    <STRING lang="en" value="[ProductName]"/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="AI.LaunchCondition.RequireBootstrapper">
+    <STRING lang="en" value="This package can only be run from a bootstrapper."/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+  <ENTRY id="Property.ARPCOMMENTS">
+    <STRING lang="en" value="This installer database contains the logic and data required to install [|ProductName]."/>
+    <STRING lang="ko" value=""/>
+    <STRING lang="zh" value=""/>
+  </ENTRY>
+</DICTIONARY>
