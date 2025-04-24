@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -74,6 +76,13 @@ namespace MD.BRIDGE.ViewModels
             set { _footerServerStatusText = value; RaisePropertiesChanged(); }
         }
 
+        private string _versionText;
+        public string VersionText
+        {
+            get => _versionText;
+            set { _versionText = value; RaisePropertiesChanged(); }
+        }
+
         private string _buildVersionText;
         public string BuildVersionText
         {
@@ -104,7 +113,14 @@ namespace MD.BRIDGE.ViewModels
             SelectedLanguage = SettingService.GetCultureInfo().Name;
 
             FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
-            BuildVersionText = "v1.0.0.0";
+            
+            Version version = Assembly.GetExecutingAssembly().GetName().Version;
+            VersionText = "v" + version;
+
+            // 빌드 버전 정보
+            FileVersionInfo buildVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+            BuildVersionText = buildVersion.ProductVersion;
+
 
             // 최초 서버 연결 시도 (초기 연결 오류가 발생할 경우 별도 처리)
             StartBridgeService(isInit: true);

@@ -556,12 +556,18 @@
                                            TextAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="MD-BRIDGE {0}">
+                                            <Binding Path="VersionText"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock FontSize="14" Foreground="Gray" 
+                                           Margin="0,5,0,30" TextAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="Build {0}">
                                             <Binding Path="BuildVersionText"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
-                                <TextBlock Text="Build 20250401.2500" FontSize="14" Foreground="Gray" 
-                                           Margin="0,5,0,30" TextAlignment="Center" HorizontalAlignment="Center"/>
                                 <TextBlock Text="© GMDSOFT Inc. All rights reserved." FontSize="12" Foreground="Gray" 
                                            TextAlignment="Center" HorizontalAlignment="Center"/>
                             </StackPanel>
