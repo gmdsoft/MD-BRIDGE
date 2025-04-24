@@ -119,7 +119,7 @@ namespace MD.BRIDGE.ViewModels
 
             // 빌드 버전 정보
             FileVersionInfo buildVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            BuildVersionText = buildVersion.ProductVersion;
+            BuildVersionText = buildVersion.FileVersion;
 
 
             // 최초 서버 연결 시도 (초기 연결 오류가 발생할 경우 별도 처리)
