@@ -556,7 +556,7 @@
                                            TextAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="MD-BRIDGE {0}">
-                                            <Binding Path="VersionText"/>
+                                            <Binding Path="BuildVersionText"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>
