@@ -60,7 +60,6 @@
                             Foreground="Gray"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left"/>
-
             </StackPanel>
             
             <!-- 오른쪽 -->
@@ -71,7 +70,7 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="builded {0}">
+                    <MultiBinding StringFormat="Version {0}">
                         <Binding Path="BuildVersionText"/>
                     </MultiBinding>
                 </TextBlock.Text>

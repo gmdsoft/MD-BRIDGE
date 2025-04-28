@@ -191,13 +191,14 @@
                 </Setter.Value>
             </Setter>
 
-            <!-- 스타일 트리거로 Border 색상 변경 -->
+            <!-- 스타일 트리거로 Border 색상 및 입력 가능 여부 변경 -->
             <Style.Triggers>
                 <!-- 연결 중 -->
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
                     <Setter Property="BorderBrush" Value="Gray"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                    <Setter Property="IsEnabled" Value="True"/>
                 </DataTrigger>
 
                 <!-- 연결 성공 -->
@@ -205,6 +206,7 @@
                              Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
                     <Setter Property="BorderBrush" Value="Green"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                    <Setter Property="IsEnabled" Value="False"/>
                 </DataTrigger>
 
                 <!-- 오류 발생 -->
@@ -212,11 +214,13 @@
                              Value="{x:Static viewModels:ServerConnectionStatus.Init_Error}">
                     <Setter Property="BorderBrush" Value="Red"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                    <Setter Property="IsEnabled" Value="True"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ServerConnectionStatus.Error}">
                     <Setter Property="BorderBrush" Value="Red"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                    <Setter Property="IsEnabled" Value="True"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -554,16 +558,12 @@
                                         HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock FontSize="24" Foreground="Black" FontWeight="Bold" 
                                            TextAlignment="Center" HorizontalAlignment="Center">
-                                    <TextBlock.Text>
-                                        <MultiBinding StringFormat="MD-BRIDGE {0}">
-                                            <Binding Path="BuildVersionText"/>
-                                        </MultiBinding>
-                                    </TextBlock.Text>
+                                    <TextBlock.Text>MD-BRIDGE</TextBlock.Text>
                                 </TextBlock>
                                 <TextBlock FontSize="14" Foreground="Gray" 
                                            Margin="0,5,0,30" TextAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="Build {0}">
+                                        <MultiBinding StringFormat="Version {0}">
                                             <Binding Path="BuildVersionText"/>
                                         </MultiBinding>
                                     </TextBlock.Text>

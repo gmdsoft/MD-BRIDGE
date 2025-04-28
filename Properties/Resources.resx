@@ -198,7 +198,7 @@
     <value>Connection failed</value>
   </data>
   <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
-    <value>Waiting</value>
+    <value>Not connected</value>
   </data>
   <data name="Input_Connection_DefaultServerAddress" xml:space="preserve">
     <value>ex) http://192.168.0.10 or http://example.com</value>

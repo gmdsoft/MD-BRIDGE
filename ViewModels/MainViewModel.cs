@@ -27,6 +27,7 @@ namespace MD.BRIDGE.ViewModels
         private readonly BridgeService _bridgeService;
         private CancellationTokenSource _cancellationTokenSource;
         private readonly ITaskbarIconService _taskbarIconService;
+        private bool isConnecting = false;  // 중복 연결 시도를 방지하는 플래그
 
         #endregion
 
@@ -113,7 +114,7 @@ namespace MD.BRIDGE.ViewModels
             SelectedLanguage = SettingService.GetCultureInfo().Name;
 
             FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
-            
+
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             VersionText = "v" + version;
 
@@ -132,6 +133,14 @@ namespace MD.BRIDGE.ViewModels
 
         private async void StartBridgeService(bool isInit = false)
         {
+            if (isConnecting)  // 이미 연결 중이라면, 연결 시도를 하지 않음
+            {
+                Console.WriteLine("현재 연결 중입니다. 잠시 후 다시 시도해주세요.");
+                return;
+            }
+
+            isConnecting = true;  // 연결 시도 시작
+
             ResetCancellationToken();
             await StopBridgeServiceInternalAsync();
 
@@ -145,6 +154,8 @@ namespace MD.BRIDGE.ViewModels
 
             // 연결 후 주기적으로 서버 상태 모니터링
             await MonitorServerConnectionAsync();
+
+            isConnecting = false;  // 연결 후 상태 초기화
         }
 
         /// <summary>
@@ -155,25 +166,34 @@ namespace MD.BRIDGE.ViewModels
             bool isConnectable = false;
             while (!isConnectable)
             {
-                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
-
-                SetConnectingStatus();
-                SettingService.SetServerAddress(ServerAddress);
-                isConnectable = await WebClientService.CheckConnection();
-
-                if (!isConnectable)
+                try
                 {
-                    if (isInit)
+                    _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+                    SetConnectingStatus();
+                    SettingService.SetServerAddress(ServerAddress);
+                    isConnectable = await WebClientService.CheckConnection();
+
+                    // 연결 실패 시 처리
+                    if (!isConnectable)
                     {
-                        SetInitErrorStatus();
-                        Console.WriteLine("최초 서버 연결 실패");
+                        if (isInit)
+                        {
+                            SetInitErrorStatus();
+                            Console.WriteLine("최초 서버 연결 실패");
+                        }
+                        else
+                        {
+                            SetErrorStatus();
+                            Console.WriteLine("서버 연결 실패");
+                        }
+                        await Task.Delay(InitialConnectionDelay, _cancellationTokenSource.Token);
                     }
-                    else
-                    {
-                        SetErrorStatus();
-                        Console.WriteLine("서버 연결 실패");
-                    }
-                    await Task.Delay(InitialConnectionDelay, _cancellationTokenSource.Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    Console.WriteLine("작업이 취소되었습니다.");
+                    break;
                 }
             }
 
