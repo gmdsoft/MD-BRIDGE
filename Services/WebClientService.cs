@@ -17,6 +17,7 @@ namespace MD.BRIDGE.Services
             {
                 try
                 {
+                    httpClient.Timeout = TimeSpan.FromSeconds(2);
                     HttpResponseMessage response = await httpClient.GetAsync("/api/v1/monitoring/ready");
                     return response.IsSuccessStatusCode;
                 }
