@@ -210,4 +210,7 @@
   <data name="Inline_Connection_ConnectingMessage" xml:space="preserve">
     <value>잠시만 기다려주세요.</value>
   </data>
+  <data name="MessageBox_Apply_Language_Message" xml:space="preserve">
+    <value>프로그램이 재시작된 후 언어 설정이 적용됩니다.</value>
+  </data>
 </root>

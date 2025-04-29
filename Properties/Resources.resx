@@ -212,4 +212,7 @@
   <data name="Inline_Connection_ConnectingMessage" xml:space="preserve">
     <value>Please wait a moment.</value>
   </data>
+  <data name="MessageBox_Apply_Language_Message" xml:space="preserve">
+    <value>The language will be applied after restarting the application.</value>
+  </data>
 </root>

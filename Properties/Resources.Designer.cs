@@ -241,6 +241,15 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The language will be applied after restarting the application..
+        /// </summary>
+        public static string MessageBox_Apply_Language_Message {
+            get {
+                return ResourceManager.GetString("MessageBox_Apply_Language_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connecting.
         /// </summary>
         public static string Status_Connecting {

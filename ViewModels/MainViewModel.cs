@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using DevExpress.Mvvm;
 using MD.BRIDGE.Properties;
@@ -295,8 +297,46 @@ namespace MD.BRIDGE.ViewModels
 
         private void ExecuteApplyLanguageCommand()
         {
+            MessageBox.Show(Resources.MessageBox_Apply_Language_Message);
             Console.WriteLine($"Selected Language: {SelectedLanguage}");
-            SettingService.SetCultureInfo(new CultureInfo(SelectedLanguage));
+            var newCulture = new CultureInfo(SelectedLanguage);
+            SettingService.SetCultureInfo(newCulture);
+
+            RestartApplication();
+        }
+
+        private void RestartApplication()
+        {
+            string exePath = Assembly.GetEntryAssembly().Location;
+            string batPath = Path.Combine(Path.GetTempPath(), "restart.bat");
+
+            var exeName = Path.GetFileName(exePath);
+
+            string batContent = $@"
+                                @echo off
+                                :loop
+                                tasklist /FI ""IMAGENAME eq {exeName}"" | find /i ""{Path.GetFileNameWithoutExtension(exeName)}"" > nul
+                                if not errorlevel 1 (
+                                    timeout /t 1 > nul
+                                    goto loop
+                                )
+                                start """" ""{exePath}""
+                                del ""%~f0""
+                                ";
+
+            File.WriteAllText(batPath, batContent);
+
+            // 배치 파일 실행
+            Process.Start(new ProcessStartInfo()
+            {
+                FileName = batPath,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true,
+                UseShellExecute = true
+            });
+
+            // 현재 앱 정상 종료
+            System.Windows.Application.Current.Shutdown();
         }
 
         #endregion
