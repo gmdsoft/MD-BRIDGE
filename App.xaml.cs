@@ -6,47 +6,54 @@ using Application = System.Windows.Application;
 using System.Threading;
 using System.Linq;
 using System;
-using System.Runtime.CompilerServices;
+using LogModule;
 
 namespace MD.BRIDGE
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private MainWindow _window;
         private const string _mutexKey = "Global\\MD-BRIDGE";
         private static Mutex _mutex;
 
-        private MainWindow _window;
-
         protected override void OnStartup(StartupEventArgs e)
         {
+            // GMD Logger 초기화
+            LoggerService.Instance.InitializeLogger("MD-Series", "MD-BRIDGE");
 
-            bool createdNew;
-            _mutex = new Mutex(true, _mutexKey, out createdNew);
-
-            if (!createdNew)
+            if (!AcquireMutex())
             {
+                Logger.Error("Another instance is already running. Exiting application.");
                 Environment.Exit(0);
             }
 
-            var cultureInfo = SettingService.GetCultureInfo();
+            Logger.Info("Mutex acquired successfully.");
 
+            InitializeApp(e);
+        }
+
+        private bool AcquireMutex()
+        {
+            bool createdNew;
+            _mutex = new Mutex(true, _mutexKey, out createdNew);
+            return createdNew;
+        }
+
+        private void InitializeApp(StartupEventArgs e)
+        {
+            Logger.Info("Initializing application.");
+
+            var cultureInfo = SettingService.GetCultureInfo();
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            Logger.Info($"Culture set to: {cultureInfo}");
 
             base.OnStartup(e);
 
-            if (_window == null)
-            {
-                _window = new MainWindow();
-                _window.DataContext = new MainViewModel(new TaskbarIconService());
-            }
+            bool isTrayOnly = e.Args.Contains("--tray-only");
+            Logger.Info($"Startup mode: {(isTrayOnly ? "Tray only" : "With window")}");
 
-            bool trayOnly = e.Args.Contains("--tray-only");
-
-            if (!trayOnly)
+            if (!isTrayOnly)
             {
                 ShowMainWindow();
             }
@@ -55,6 +62,8 @@ namespace MD.BRIDGE
         protected override void OnExit(ExitEventArgs e)
         {
             _mutex?.ReleaseMutex();
+            Logger.Info("Mutex is released. Application exited.");
+            
             base.OnExit(e);
         }
 

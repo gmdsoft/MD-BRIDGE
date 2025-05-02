@@ -1,3 +1,4 @@
+using LogModule;
 using MD.Platform.Log;
 using Newtonsoft.Json;
 using System;
@@ -23,7 +24,7 @@ namespace MD.BRIDGE.Services
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.Error($"Fail to connect to server.\n{e.Message}");
                     return false;
                 }
             }
@@ -46,7 +47,7 @@ namespace MD.BRIDGE.Services
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.Error($"Fail to upload logs.\n{e.Message}");
                     return false;
                 }
             }
@@ -70,7 +71,7 @@ namespace MD.BRIDGE.Services
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.Error($"Fail to terminate monitoring.\n{e.Message}");
                     return false;
                 }
             }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 
 using MD.BRIDGE.Utils;
+using LogModule;
 
 namespace MD.BRIDGE.Services
 
@@ -39,7 +40,7 @@ namespace MD.BRIDGE.Services
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e);
+                        Logger.Error($"Fail to extract log string from {filePath}.\n{e.Message}");
                     }
                 }
             }

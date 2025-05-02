@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MD", "MD", "{02EA681E-C7D8-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MD.Platform.Log", "..\MD\Platform\Log\MD.Platform.Log\MD.Platform.Log.csproj", "{B1C651D8-5750-4930-A31C-453FA1F52304}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common.Library", "Common.Library", "{A89058C8-DB4D-455B-BA24-7ECA13E2F0BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogModule", "..\Common.Library\Modules\Log\LogModule\LogModule.csproj", "{70CCDF94-7EC9-48D7-B78F-8ADBEC923500}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,15 +27,20 @@ Global
 		{B1C651D8-5750-4930-A31C-453FA1F52304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1C651D8-5750-4930-A31C-453FA1F52304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1C651D8-5750-4930-A31C-453FA1F52304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70CCDF94-7EC9-48D7-B78F-8ADBEC923500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70CCDF94-7EC9-48D7-B78F-8ADBEC923500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70CCDF94-7EC9-48D7-B78F-8ADBEC923500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70CCDF94-7EC9-48D7-B78F-8ADBEC923500}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B1C651D8-5750-4930-A31C-453FA1F52304} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{70CCDF94-7EC9-48D7-B78F-8ADBEC923500} = {A89058C8-DB4D-455B-BA24-7ECA13E2F0BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_CultureCountyOverrides = ko=ko-KR
 		SolutionGuid = {3A59A06C-3DB6-49BC-B52E-160F1B92DB84}
+		RESX_CultureCountyOverrides = ko=ko-KR
 	EndGlobalSection
 EndGlobal

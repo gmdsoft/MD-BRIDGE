@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 using DevExpress.Mvvm;
+using LogModule;
 using MD.BRIDGE.Properties;
 using MD.BRIDGE.Services;
 
@@ -135,9 +136,11 @@ namespace MD.BRIDGE.ViewModels
 
         private async void StartBridgeService(bool isInit = false)
         {
+            Logger.Info("Starting bridgeService.");
+
             if (isConnecting)  // 이미 연결 중이라면, 연결 시도를 하지 않음
             {
-                Console.WriteLine("현재 연결 중입니다. 잠시 후 다시 시도해주세요.");
+                Logger.Info("Connecting to the server. Please wait a moment and try again.");
                 return;
             }
 
@@ -158,6 +161,33 @@ namespace MD.BRIDGE.ViewModels
             await MonitorServerConnectionAsync();
 
             isConnecting = false;  // 연결 후 상태 초기화
+        }
+
+        /// <summary>
+        /// 기존의 CancellationTokenSource를 취소 및 해제하고 새로 생성합니다.
+        /// </summary>
+        private void ResetCancellationToken()
+        {
+            Logger.Info("Resetting CancellationTokenSource.");
+            if (_cancellationTokenSource != null)
+            {
+                Logger.Debug("Cancel and dispose CancellationTokenSource.");
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource.Dispose();
+            }
+            _cancellationTokenSource = new CancellationTokenSource();
+            Logger.Debug("CancellationTokenSource created.");
+        }
+
+        /// <summary>
+        /// 현재 브릿지 서비스를 중지하고 완료될 때까지 기다립니다.
+        /// </summary>
+        private async Task StopBridgeServiceInternalAsync()
+        {
+            Logger.Info("Stopping BridgeService.");
+
+            _bridgeService.Stop();
+            await _bridgeService.WaitForCompletion();
         }
 
         /// <summary>
@@ -182,19 +212,19 @@ namespace MD.BRIDGE.ViewModels
                         if (isInit)
                         {
                             SetInitErrorStatus();
-                            Console.WriteLine("최초 서버 연결 실패");
+                            Logger.Info("Unable to initialize server connection");
                         }
                         else
                         {
                             SetErrorStatus();
-                            Console.WriteLine("서버 연결 실패");
+                            Logger.Info("Unable to connect to the server");
                         }
                         await Task.Delay(InitialConnectionDelay, _cancellationTokenSource.Token);
                     }
                 }
                 catch (TaskCanceledException)
                 {
-                    Console.WriteLine("작업이 취소되었습니다.");
+                    Logger.Info("Connection attempt canceled.");
                     break;
                 }
             }
@@ -217,62 +247,40 @@ namespace MD.BRIDGE.ViewModels
                     bool connectionOk = await WebClientService.CheckConnection();
                     if (!connectionOk)
                     {
-                        Console.WriteLine("실행 중 서버 연결이 끊어졌습니다.");
+                        Logger.Info("Server connection lost. Stopping BridgeService.");
                         _bridgeService.Stop();
                         SetErrorStatus();
 
                         // 서버 복구 대기 루프
-                        while (!_cancellationTokenSource.Token.IsCancellationRequested &&
-                               !(await WebClientService.CheckConnection()))
+                        while (!_cancellationTokenSource.Token.IsCancellationRequested && !(await WebClientService.CheckConnection()))
                         {
-                            Console.WriteLine("서버 복구 대기 중...");
+                            Logger.Info("Server connection lost. Waiting for recovery...");
                             await Task.Delay(MonitorConnectionDelay, _cancellationTokenSource.Token);
                         }
 
-                        Console.WriteLine("서버 응답 정상 복구됨");
+                        Logger.Info("Server connection restored. Restarting BridgeService.");
                         SetConnectedStatus();
                         _bridgeService.Run();
                     }
                 }
                 catch (OperationCanceledException)
                 {
-                    Console.WriteLine("모니터링 작업 취소됨");
+                    Logger.Info("Monitoring task canceled.");
                     break;
                 }
             }
         }
 
-        /// <summary>
-        /// 현재 브릿지 서비스를 중지하고 완료될 때까지 기다립니다.
-        /// </summary>
-        private async Task StopBridgeServiceInternalAsync()
-        {
-            _bridgeService.Stop();
-            await _bridgeService.WaitForCompletion();
-        }
-
-        /// <summary>
-        /// 기존의 CancellationTokenSource를 취소 및 해제하고 새로 생성합니다.
-        /// </summary>
-        private void ResetCancellationToken()
-        {
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-            }
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
-
         private async void StopBridgeService()
         {
+            Logger.Info("Stopping BridgeService.");
             await StopBridgeServiceInternalAsync();
 
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
+            Logger.Debug("Cancel and dispose CancellationTokenSource.");
 
-            ConnectionStatus = ServerConnectionStatus.Idle;
             SetIdleState();
         }
 
@@ -282,7 +290,7 @@ namespace MD.BRIDGE.ViewModels
 
         private void ExecuteConnectToServerCommand()
         {
-            Console.WriteLine($"입력받은 서버 주소: {ServerAddress}");
+            Logger.Info($"New server address: {ServerAddress}");
             SettingService.SetServerAddress(ServerAddress);
 
             if (ConnectionStatus == ServerConnectionStatus.Connected)
@@ -298,7 +306,7 @@ namespace MD.BRIDGE.ViewModels
         private void ExecuteApplyLanguageCommand()
         {
             MessageBox.Show(Resources.MessageBox_Apply_Language_Message);
-            Console.WriteLine($"Selected Language: {SelectedLanguage}");
+            Logger.Info($"Selected language: {SelectedLanguage}");
             var newCulture = new CultureInfo(SelectedLanguage);
             SettingService.SetCultureInfo(newCulture);
 
@@ -341,55 +349,70 @@ namespace MD.BRIDGE.ViewModels
 
         #endregion
 
-        #region UI Status Helpers
+        #region Status Helpers
 
         private void SetIdleState()
         {
+            Logger.Info("Setting idle state.");
+
             _taskbarIconService.SetTrayIcon("Assets/tray_waiting.png");
             _taskbarIconService.UpdateToolTipMessage(Resources.Tray_IdleMessage);
 
             ConnectionStatusDetailText = Resources.Inline_Connection_IdleMessage;
             FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
+
             ConnectionStatus = ServerConnectionStatus.Idle;
         }
 
         private void SetConnectingStatus()
         {
+            Logger.Info("Setting connecting status.");
+
             _taskbarIconService.SetTrayIcon("Assets/tray_normal.png");
             _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectingMessage);
 
             ConnectionStatusDetailText = Resources.Inline_Connection_ConnectingMessage;
             FooterServerStatusText = Resources.Footer_ServerStatus_Connecting;
+
             ConnectionStatus = ServerConnectionStatus.Connecting;
         }
 
         private void SetConnectedStatus()
         {
+            Logger.Info("Setting connected status.");
+
             _taskbarIconService.SetTrayIcon("Assets/tray_connected.png");
             _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectedMessage);
 
             ConnectionStatusDetailText = Resources.Inline_Connection_DefaultMessage;
             FooterServerStatusText = Resources.Footer_ServerStatus_Connected;
+
             ConnectionStatus = ServerConnectionStatus.Connected;
         }
 
         private void SetErrorStatus()
         {
+            Logger.Info("Setting error status.");
+
             _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
             _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
 
             ConnectionStatusDetailText = Resources.Inline_Connection_ErrorMessage;
             FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
+
             ConnectionStatus = ServerConnectionStatus.Error;
         }
 
         private void SetInitErrorStatus()
         {
+            Logger.Info("Setting initial error status.");
+
             _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
             _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
 
             ConnectionStatusDetailText = Resources.Inline_Connection_initErrorMessage;
             FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
+
             ConnectionStatus = ServerConnectionStatus.Init_Error;
         }
 

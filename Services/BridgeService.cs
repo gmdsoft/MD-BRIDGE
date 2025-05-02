@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using MD.BRIDGE.Utils;
+using LogModule;
 
 namespace MD.BRIDGE.Services
 {
@@ -53,7 +54,7 @@ namespace MD.BRIDGE.Services
         private async Task MonitoringLogTask(CancellationToken cancellationToken)
         {
             var productLogDirectories = SettingService.GetProductLogDictionaries();
-            Console.WriteLine($"[{DateTimeOffset.Now}] Start MonitoringLogTask.");
+            Logger.Info($"Start monitoringLogTask.");
 
             try
             {
@@ -77,34 +78,32 @@ namespace MD.BRIDGE.Services
             var offset = SettingService.GetProductOffset(product);
 
             DateTimeOffset now = DateTimeOffset.Now;
-            Console.WriteLine($"[{DateTimeOffset.Now}] Start HandleLogTask. Offset: {offset}, Now: {now}");
+            Logger.Info($"Start processMonitoringLog. Product:{product}, Offset: {offset}");
 
             /** Serach log files */
-            Console.WriteLine($"[{DateTimeOffset.Now}] Start Search LogFiles.");
             var logFilePaths = GetLogFilePaths(logDirectory: logDirectory, start: offset, end: now);
-            Console.WriteLine($"[{DateTimeOffset.Now}] Product:{product}, log file size:{logFilePaths.Count()}");
-            Console.WriteLine($"[{DateTimeOffset.Now}] Finish Search LogFiles.");
+            Logger.Info($"Searched Logs. Product:{product}, log file size:{logFilePaths.Count()}");
 
             if (logFilePaths.Count() == 0)
             {
-                Console.WriteLine($"[{DateTimeOffset.Now}] Nothing to handle... Finish HandleLogTask.");
+                Logger.Debug($"Nothing to handle. Finish HandleLogTask. Product:{product}, Offset: {offset}");
                 return;
             }
 
             /** Parse logs */
-            Console.WriteLine($"[{DateTimeOffset.Now}] Start Parsing Logs.");
+            Logger.Info("Start parsing logs.");
             var pathToRecords = logFilePaths.ToDictionary(
                 logFilePath => logFilePath,
                 logFilePath => LogExctractorService.Extract(logFilePath, offset, now)
             );
 
             pathToRecords.ToList().ForEach(pathToLog =>
-                Console.WriteLine($"[{DateTimeOffset.Now}] ㄴ Log file name:{pathToLog.Key}, Records:{pathToLog.Value.Count()}")
+                Logger.Info($" - Log file name:{pathToLog.Key}, Records:{pathToLog.Value.Count()}")
             );
-            Console.WriteLine($"[{DateTimeOffset.Now}] Finish Parsing Logs.");
+            Logger.Info("Finish parsing logs.");
 
             /** Upload logs to server */
-            Console.WriteLine($"[{DateTimeOffset.Now}] Start Upload Logs.");
+            Logger.Info("Start upload logs.");
             var isSuccess = await WebClientService.UploadLogs(
                 request: new WebClientService.UploadLogRequest(
                     product: product,
@@ -117,18 +116,16 @@ namespace MD.BRIDGE.Services
 
             if (isSuccess)
             {
-                // Todo: clean up log files
                 CleanUpLogFiles(logFilePaths, offset, now);
                 SettingService.SetProductOffset(product, now);
             }
             else
             {
-                Console.WriteLine($"[{DateTimeOffset.Now}] Fail to upload logs.");
+                Logger.Debug("Fail to upload logs.");
             }
-            Console.WriteLine($"[{DateTimeOffset.Now}] Finish Upload Logs.");
+            Logger.Info("Finish upload logs.");
 
-
-            Console.WriteLine($"[{DateTimeOffset.Now}] Finish HandleLogTask.");
+            Logger.Info("Finish ProcessMonitoringLog.");
         }
 
         private IEnumerable<string> GetLogFilePaths(string logDirectory, DateTimeOffset start, DateTimeOffset end)
@@ -148,6 +145,8 @@ namespace MD.BRIDGE.Services
             var completedLogfilePaths = logFilePaths
                 .Where(IsFileClosed) // 다른 프로세스가 사용하지 않는 로그파일 filter
                 .Where(filePath => new DateTimeOffset(File.GetLastWriteTimeUtc(filePath), TimeSpan.Zero).IsBetween(start, end));
+
+            Logger.Info($"Completed log files: {completedLogfilePaths}");
 
             await WebClientService.TerminateMonitoring(new WebClientService.TerminateMonitoringRequest(
                 fileNames: completedLogfilePaths.Select(filePath => Path.GetFileName(filePath))

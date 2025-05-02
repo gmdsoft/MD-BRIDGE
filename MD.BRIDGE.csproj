@@ -145,6 +145,10 @@
     <Resource Include="Assets\tray_waiting.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Library\Modules\Log\LogModule\LogModule.csproj">
+      <Project>{70ccdf94-7ec9-48d7-b78f-8adbec923500}</Project>
+      <Name>LogModule</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MD\Platform\Log\MD.Platform.Log\MD.Platform.Log.csproj">
       <Project>{b1c651d8-5750-4930-a31c-453fa1f52304}</Project>
       <Name>MD.Platform.Log</Name>
