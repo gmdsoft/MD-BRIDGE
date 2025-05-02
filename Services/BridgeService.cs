@@ -78,12 +78,9 @@ namespace MD.BRIDGE.Services
             var offset = SettingService.GetProductOffset(product);
 
             DateTimeOffset now = DateTimeOffset.Now;
-            Logger.Info($"Start processMonitoringLog. Product:{product}, Offset: {offset}");
 
             /** Serach log files */
             var logFilePaths = GetLogFilePaths(logDirectory: logDirectory, start: offset, end: now);
-            Logger.Info($"Searched Logs. Product:{product}, log file size:{logFilePaths.Count()}");
-
             if (logFilePaths.Count() == 0)
             {
                 Logger.Debug($"Nothing to handle. Finish HandleLogTask. Product:{product}, Offset: {offset}");
@@ -91,7 +88,6 @@ namespace MD.BRIDGE.Services
             }
 
             /** Parse logs */
-            Logger.Info("Start parsing logs.");
             var pathToRecords = logFilePaths.ToDictionary(
                 logFilePath => logFilePath,
                 logFilePath => LogExctractorService.Extract(logFilePath, offset, now)
@@ -100,10 +96,8 @@ namespace MD.BRIDGE.Services
             pathToRecords.ToList().ForEach(pathToLog =>
                 Logger.Info($" - Log file name:{pathToLog.Key}, Records:{pathToLog.Value.Count()}")
             );
-            Logger.Info("Finish parsing logs.");
 
             /** Upload logs to server */
-            Logger.Info("Start upload logs.");
             var isSuccess = await WebClientService.UploadLogs(
                 request: new WebClientService.UploadLogRequest(
                     product: product,
@@ -123,9 +117,6 @@ namespace MD.BRIDGE.Services
             {
                 Logger.Debug("Fail to upload logs.");
             }
-            Logger.Info("Finish upload logs.");
-
-            Logger.Info("Finish ProcessMonitoringLog.");
         }
 
         private IEnumerable<string> GetLogFilePaths(string logDirectory, DateTimeOffset start, DateTimeOffset end)
