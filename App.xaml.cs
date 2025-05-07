@@ -19,15 +19,15 @@ namespace MD.BRIDGE
         protected override void OnStartup(StartupEventArgs e)
         {
             // GMD Logger 초기화
-            //LoggerService.Instance.InitializeLogger("MD-Series", "MD-BRIDGE");
+            LoggerService.Instance.InitializeLogger("MD-Series", "MD-BRIDGE");
 
             if (!AcquireMutex())
             {
-                //Logger.Error("Another instance is already running. Exiting application.");
+                Logger.Error("Another instance is already running. Exiting application.");
                 Environment.Exit(0);
             }
 
-            //Logger.Info("Mutex acquired successfully.");
+            Logger.Info("Mutex acquired successfully.");
 
             InitializeApp(e);
         }
@@ -41,17 +41,17 @@ namespace MD.BRIDGE
 
         private void InitializeApp(StartupEventArgs e)
         {
-            //Logger.Info("Initializing application.");
+            Logger.Info("Initializing application.");
 
             var cultureInfo = SettingService.GetCultureInfo();
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
-            //Logger.Info($"Culture set to: {cultureInfo}");
+            Logger.Info($"Culture set to: {cultureInfo}");
 
             base.OnStartup(e);
 
             bool isTrayOnly = e.Args.Contains("--tray-only");
-            //Logger.Info($"Startup mode: {(isTrayOnly ? "Tray only" : "With window")}");
+            Logger.Info($"Startup mode: {(isTrayOnly ? "Tray only" : "With window")}");
 
             if (!isTrayOnly)
             {
@@ -62,7 +62,7 @@ namespace MD.BRIDGE
         protected override void OnExit(ExitEventArgs e)
         {
             _mutex?.ReleaseMutex();
-            //Logger.Info("Mutex is released. Application exited.");
+            Logger.Info("Mutex is released. Application exited.");
             
             base.OnExit(e);
         }
