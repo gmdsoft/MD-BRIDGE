@@ -83,11 +83,9 @@ namespace MD.BRIDGE.Services
             var logFilePaths = GetLogFilePaths(logDirectory: logDirectory, start: offset, end: now);
             if (logFilePaths.Count() == 0)
             {
-                Logger.Debug($"Nothing to handle. Finish HandleLogTask. Product:{product}, Offset: {offset}");
                 return;
             }
 
-            /** Parse logs */
             var pathToRecords = logFilePaths.ToDictionary(
                 logFilePath => logFilePath,
                 logFilePath => LogExctractorService.Extract(logFilePath, offset, now)

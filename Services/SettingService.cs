@@ -44,6 +44,8 @@ namespace MD.BRIDGE.Services
         private static CultureInfo _defaultCurlture = new CultureInfo("en-US");
         #endregion
 
+        private static object _fileLock = new object();
+
         private static string _settingPath
         {
             get
@@ -55,41 +57,47 @@ namespace MD.BRIDGE.Services
 
         private static SettingsModel LoadSettings()
         {
-            SettingsModel setting = File.Exists(_settingPath)
-                ? JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(_settingPath)) // 기존 설정 불러오기
-                : new SettingsModel
-                {
-                    ServerAddress = DefaultServerAddress,
-                    ProductLogDirectories = _productLogDirectories,
-                    CultureInfo = _defaultCurlture,
-                    ProductOffsets = _defaultProductOffsets
-                };
+            lock (_fileLock)
+            {
+                SettingsModel setting = File.Exists(_settingPath)
+                    ? JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(_settingPath)) // 기존 설정 불러오기
+                    : new SettingsModel
+                    {
+                        ServerAddress = DefaultServerAddress,
+                        ProductLogDirectories = _productLogDirectories,
+                        CultureInfo = _defaultCurlture,
+                        ProductOffsets = _defaultProductOffsets
+                    };
 
-            // 실제 설치된 제품만 설정에 포함
-            setting.ProductLogDirectories = _productLogDirectories
-                .Where(kvp => Directory.Exists(kvp.Value))
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                // 실제 설치된 제품만 설정에 포함
+                setting.ProductLogDirectories = _productLogDirectories
+                    .Where(kvp => Directory.Exists(kvp.Value))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            setting.ProductOffsets = setting.ProductLogDirectories
-                .ToDictionary(
-                    kvp => kvp.Key,
-                    kvp => setting.ProductOffsets.ContainsKey(kvp.Key) ? setting.ProductOffsets[kvp.Key] : _defaultProductOffsets[kvp.Key]
-                );
+                setting.ProductOffsets = setting.ProductLogDirectories
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => setting.ProductOffsets.ContainsKey(kvp.Key) ? setting.ProductOffsets[kvp.Key] : _defaultProductOffsets[kvp.Key]
+                    );
 
-            SaveSettings(setting);
-            return setting;
+                SaveSettings(setting);
+                return setting;
+            }
         }
 
         private static void SaveSettings(SettingsModel settings)
         {
-            var directoryPath = Path.GetDirectoryName(_settingPath);
-            if (!Directory.Exists(_settingPath))
+            lock (_fileLock)
             {
-                Directory.CreateDirectory(directoryPath);
-            }
+                var directoryPath = Path.GetDirectoryName(_settingPath);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
 
-            var jsonString = JsonConvert.SerializeObject(settings, Formatting.Indented);
-            File.WriteAllText(_settingPath, jsonString);
+                var jsonString = JsonConvert.SerializeObject(settings, Formatting.Indented);
+                File.WriteAllText(_settingPath, jsonString);
+            }
         }
 
         public static string GetServerAddress()
