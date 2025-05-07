@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="root" xmlns="">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" p4:IsDataSet="true" xmlns:p4="urn:schemas-microsoft-com:xml-msdata">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="{http://www.w3.org/XML/1998/namespace}space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" p4:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" p4:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" p4:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" p4:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" p4:Ordinal="4" />
+              <xsd:attribute ref="{http://www.w3.org/XML/1998/namespace}space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" p4:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Button_Connect" xml:space="preserve">
+    <value>Hubungkan</value>
+  </data>
+  <data name="Tab_Info" xml:space="preserve">
+    <value>Informasi</value>
+  </data>
+  <data name="Tab_Home" xml:space="preserve">
+    <value>Rumah</value>
+  </data>
+  <data name="Tab_Settings" xml:space="preserve">
+    <value>Pengaturan</value>
+  </data>
+  <data name="Input_ServerAddress" xml:space="preserve">
+    <value>Alamat Server</value>
+  </data>
+  <data name="Inline_Connection_DefaultMessage" xml:space="preserve">
+    <value>Koneksi server tetap aktif meskipun Anda memulai ulang PC.</value>
+  </data>
+  <data name="Status_Connecting" xml:space="preserve">
+    <value>Menghubungkan</value>
+  </data>
+  <data name="Status_Fail" xml:space="preserve">
+    <value>Koneksi gagal</value>
+  </data>
+  <data name="Inline_Connection_initErrorMessage" xml:space="preserve">
+    <value>⚠️ Tidak dapat terhubung ke server. Periksa alamat server dan coba lagi.</value>
+  </data>
+  <data name="Button_Stop" xml:space="preserve">
+    <value>Berhenti</value>
+  </data>
+  <data name="Inline_Connected" xml:space="preserve">
+    <value>Terhubung</value>
+  </data>
+  <data name="Inline_ConnecetionFail" xml:space="preserve">
+    <value>Koneksi Gagal</value>
+  </data>
+  <data name="Input_Language" xml:space="preserve">
+    <value>Bahasa</value>
+  </data>
+  <data name="Button_Apply" xml:space="preserve">
+    <value>Aplikasikan</value>
+  </data>
+  <data name="Inline_Language_DefaultMessage" xml:space="preserve">
+    <value>Mulai ulang program untuk mengubah pengaturan bahasa.</value>
+  </data>
+  <data name="Tray_Button_Open" xml:space="preserve">
+    <value>Buka</value>
+  </data>
+  <data name="Tray_Button_Exit" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="Tray_IdleMessage" xml:space="preserve">
+    <value>Tidak terhubung ke server.</value>
+  </data>
+  <data name="Tray_ConnectFailMessage" xml:space="preserve">
+    <value>Tidak dapat terhubung ke server</value>
+  </data>
+  <data name="Tray_ConnectingMessage" xml:space="preserve">
+    <value>Menghubungkan ke server.</value>
+  </data>
+  <data name="Inline_Connection_ErrorMessage" xml:space="preserve">
+    <value>⚠️ Tidak dapat terhubung ke server. Periksa koneksi internet Anda.</value>
+  </data>
+  <data name="Tray_ConnectedMessage" xml:space="preserve">
+    <value>Terhubung ke server.</value>
+  </data>
+  <data name="Inline_Footer_ServerStatus" xml:space="preserve">
+    <value>Server:</value>
+  </data>
+  <data name="Footer_ServerStatus_Connected" xml:space="preserve">
+    <value>Terhubung</value>
+  </data>
+  <data name="Footer_ServerStatus_Connecting" xml:space="preserve">
+    <value>Menyambungkan</value>
+  </data>
+  <data name="Footer_ServerStatus_Failed" xml:space="preserve">
+    <value>Koneksi gagal</value>
+  </data>
+  <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
+    <value>Tidak terhubung</value>
+  </data>
+  <data name="Input_Connection_DefaultServerAddress" xml:space="preserve">
+    <value>contoh) http://192.168.0.10 atau http://example.com</value>
+  </data>
+  <data name="Input_ServerConnection" xml:space="preserve">
+    <value>Koneksi Server</value>
+  </data>
+  <data name="Inline_Connection_IdleMessage" xml:space="preserve">
+    <value>Harap masukkan alamat server dan klik tombol terhubung.</value>
+  </data>
+  <data name="Inline_Connection_ConnectingMessage" xml:space="preserve">
+    <value>Tolong tunggu sebentar.</value>
+  </data>
+  <data name="MessageBox_Apply_Language_Message" xml:space="preserve">
+    <value>Bahasa akan diterapkan setelah memulai ulang aplikasi.</value>
+  </data>
+</root>
