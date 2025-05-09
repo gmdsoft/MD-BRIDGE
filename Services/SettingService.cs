@@ -14,19 +14,19 @@ namespace MD.BRIDGE.Services
         #region Default Values
         public static string DefaultServerAddress { get; } = "http://172.16.3.82:8080";
 
-        private static Dictionary<Product, string> _productLogDirectories
+        private static Dictionary<Product, List<string>> _productLogDirectories
         {
             get
             {
                 string userName = Environment.UserName;
-                return new Dictionary<Product, string>() {
-                    { Product.MD_NEXT,  $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-NEXT\Log" },
-                    { Product.MD_RED3,  $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-RED\Log" },
-                    { Product.MD_RED4,  $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-RED4\Log" },
-                    { Product.MD_VIDEO, $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-MEDIA\Log" },
-                    { Product.MD_LIVE,  $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-LIVE\Log" },
-                    { Product.MD_CLOUD, $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-CLOUD\Log" },
-                    { Product.MD_DRONE, $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-DRONE\Log" }
+                return new Dictionary<Product, List<string>>() {
+                    { Product.MD_NEXT, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-NEXT\Log" } },
+                    { Product.MD_RED3, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-RED\Log" } },
+                    { Product.MD_RED4, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-RED4\Log" } },
+                    { Product.MD_VIDEO, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-MEDIA\Log", $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-VIDEO\Log" } },
+                    { Product.MD_LIVE, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-LIVE\Log" } },
+                    { Product.MD_CLOUD, new List<string> {  $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-CLOUD\Log" } },
+                    { Product.MD_DRONE, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-DRONE\Log" } }
                 };
             }
         }
@@ -71,8 +71,11 @@ namespace MD.BRIDGE.Services
 
                 // 실제 설치된 제품만 설정에 포함
                 setting.ProductLogDirectories = _productLogDirectories
-                    .Where(kvp => Directory.Exists(kvp.Value))
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                    .Where(kvp => kvp.Value.Any(Directory.Exists))
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Where(Directory.Exists).ToList()
+                    );
 
                 setting.ProductOffsets = setting.ProductLogDirectories
                     .ToDictionary(
@@ -125,12 +128,12 @@ namespace MD.BRIDGE.Services
             SaveSettings(settings);
         }
 
-        public static Dictionary<Product, string> GetProductLogDictionaries()
+        public static Dictionary<Product, List<string>> GetProductLogDictionaries()
         {
             return LoadSettings().ProductLogDirectories;
         }
 
-        public static string GetLogDirectory(Product product)
+        public static List<string> GetLogDirectories(Product product)
         {
             return LoadSettings().ProductLogDirectories[product];
         }

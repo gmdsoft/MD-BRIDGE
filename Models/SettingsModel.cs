@@ -10,7 +10,7 @@ namespace MD.BRIDGE
     {
         public string ServerAddress { get; set; }
 
-        public Dictionary<Product, string> ProductLogDirectories { get; set; }
+        public Dictionary<Product, List<string>> ProductLogDirectories { get; set; }
 
         [JsonConverter(typeof(CultureInfoConverter))]
         public CultureInfo CultureInfo { get; set; }

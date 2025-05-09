@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using MD.BRIDGE.Utils;
 using LogModule;
+using DevExpress.Mvvm.Native;
 
 namespace MD.BRIDGE.Services
 {
@@ -74,13 +75,13 @@ namespace MD.BRIDGE.Services
         private async void ProcessMonitoringLog(Product product)
         {
 
-            var logDirectory = SettingService.GetLogDirectory(product);
+            var logDirectories = SettingService.GetLogDirectories(product);
             var offset = SettingService.GetProductOffset(product);
 
             DateTimeOffset now = DateTimeOffset.Now;
 
             /** Serach log files */
-            var logFilePaths = GetLogFilePaths(logDirectory: logDirectory, start: offset, end: now);
+            var logFilePaths = logDirectories.SelectMany(logDirectory => GetLogFilePaths(logDirectory: logDirectory, start: offset, end: now));
             if (logFilePaths.Count() == 0)
             {
                 return;
