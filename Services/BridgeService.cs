@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using MD.BRIDGE.Utils;
 using LogModule;
 using DevExpress.Mvvm.Native;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace MD.BRIDGE.Services
 {
@@ -109,7 +111,7 @@ namespace MD.BRIDGE.Services
 
             if (isSuccess)
             {
-                //CleanUpLogFiles(logFilePaths, offset, now);
+                CleanUpLogFiles(logFilePaths, offset, now);
                 SettingService.SetProductOffset(product, now);
             }
             else
@@ -133,8 +135,13 @@ namespace MD.BRIDGE.Services
         private async void CleanUpLogFiles(IEnumerable<string> logFilePaths, DateTimeOffset start, DateTimeOffset end)
         {
             var completedLogfilePaths = logFilePaths
-                .Where(IsFileClosed) // 다른 프로세스가 사용하지 않는 로그파일 filter
+                .Where(filePath => !IsProcessRunning(filePath)) // 다른 프로세스가 사용하지 않는 로그파일 filter
                 .Where(filePath => new DateTimeOffset(File.GetLastWriteTimeUtc(filePath), TimeSpan.Zero).IsBetween(start, end));
+
+            if (completedLogfilePaths.Count() == 0)
+            {
+                return;
+            }
 
             Logger.Info($"Completed log files: {string.Join("\n", completedLogfilePaths)}");
 
@@ -142,22 +149,30 @@ namespace MD.BRIDGE.Services
                 fileNames: completedLogfilePaths.Select(filePath => Path.GetFileName(filePath))
             ));
         }
-        
-        // Todo 다른 방법을 찾아야함.
-        private bool IsFileClosed(string logFilePath)
-        {
-            try
-            {
-                using (File.Open(logFilePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
-                {
-                    return true;
-                }
 
-            }
-            catch (Exception)
+        // Todo 다른 방법을 찾아야함.
+        private bool IsProcessRunning(string logFilePath)
+        {
+            var pattern = @"\[(\d+)\]";
+            var match = Regex.Match(logFilePath, pattern);
+
+            if (match.Success)
             {
-                return false;
+                var processId = int.Parse(match.Groups[1].Value);
+                try
+                {
+                    var process = Process.GetProcessById(processId);
+                    return !process.HasExited;
+                }
+                catch (ArgumentException)
+                {
+                    // Process has exited
+                    return false;
+                }
             }
+
+            // If the pattern does not match, assume the process is not running
+            return false;
         }
     }
 }
