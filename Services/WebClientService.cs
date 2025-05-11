@@ -66,7 +66,7 @@ namespace MD.BRIDGE.Services
                         "application/json"
                     );
 
-                    HttpResponseMessage response = await httpClient.PutAsync("/api/v1/monitoring/termination", content);
+                    HttpResponseMessage response = await httpClient.PutAsync("/api/v1/monitoring/logs/termination", content);
                     return response.IsSuccessStatusCode;
                 }
                 catch (Exception e)
