@@ -73,6 +73,7 @@ namespace MD.BRIDGE.ViewModels
                 }
             }
         }
+
         private string _footerServerStatusText;
         public string FooterServerStatusText
         {
@@ -147,7 +148,7 @@ namespace MD.BRIDGE.ViewModels
             isConnecting = true;  // 연결 시도 시작
 
             ResetCancellationToken();
-            await StopBridgeServiceInternalAsync();
+            await StopBridgeServiceAsync();
 
             // 최초 연결 시도
             await AttemptInitialConnectionAsync(isInit);
@@ -155,7 +156,7 @@ namespace MD.BRIDGE.ViewModels
                 return;
 
             SetConnectedStatus();
-            _bridgeService.Run();
+            await _bridgeService.RunAsync();
 
             // 연결 후 주기적으로 서버 상태 모니터링
             await MonitorServerConnectionAsync();
@@ -168,13 +169,9 @@ namespace MD.BRIDGE.ViewModels
         /// </summary>
         private void ResetCancellationToken()
         {
-            Logger.Info("Resetting CancellationTokenSource.");
-            if (_cancellationTokenSource != null)
-            {
-                Logger.Debug("Cancel and dispose CancellationTokenSource.");
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource.Dispose();
-            }
+            Logger.Info("Reset CancellationTokenSource.");
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = new CancellationTokenSource();
             Logger.Debug("CancellationTokenSource created.");
         }
@@ -182,7 +179,7 @@ namespace MD.BRIDGE.ViewModels
         /// <summary>
         /// 현재 브릿지 서비스를 중지하고 완료될 때까지 기다립니다.
         /// </summary>
-        private async Task StopBridgeServiceInternalAsync()
+        private async Task StopBridgeServiceAsync()
         {
             Logger.Info("Stopping BridgeService.");
 
@@ -260,7 +257,7 @@ namespace MD.BRIDGE.ViewModels
 
                         Logger.Info("Server connection restored. Restarting BridgeService.");
                         SetConnectedStatus();
-                        _bridgeService.Run();
+                        await _bridgeService.RunAsync();
                     }
                 }
                 catch (OperationCanceledException)
@@ -274,7 +271,7 @@ namespace MD.BRIDGE.ViewModels
         private async void StopBridgeService()
         {
             Logger.Info("Stopping BridgeService.");
-            await StopBridgeServiceInternalAsync();
+            await StopBridgeServiceAsync();
 
             _cancellationTokenSource?.Cancel();
             _cancellationTokenSource?.Dispose();
