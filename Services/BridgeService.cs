@@ -99,19 +99,27 @@ namespace MD.BRIDGE.Services
             );
 
             /** Upload logs to server */
-            var isSuccess = await WebClientService.UploadLogs(
-                request: new WebClientService.UploadLogRequest(
-                    product: product,
-                    logs: pathToRecords.Select(kvp => new WebClientService.UploadLogRequest.Log(
-                        filename: Path.GetFileName(kvp.Key),
-                        records: kvp.Value
-                    ))
-                )
-            );
+            bool isSuccess;
+            if (pathToRecords.Count() == 0)
+            {
+                isSuccess = true;
+            }
+            else
+            {
+                isSuccess = await WebClientService.UploadLogs(
+                    request: new WebClientService.UploadLogRequest(
+                        product: product,
+                        logs: pathToRecords.Select(kvp => new WebClientService.UploadLogRequest.Log(
+                            filename: Path.GetFileName(kvp.Key),
+                            records: kvp.Value
+                        ))
+                    )
+                );
+            }
 
             if (isSuccess)
             {
-                CleanUpLogFiles(logFilePaths, offset, now);
+                await CleanUpMonitorLogFilesAsync(logDirectories);
                 SettingService.SetProductOffset(product, now);
             }
             else
@@ -127,30 +135,61 @@ namespace MD.BRIDGE.Services
                 return new List<string>();
             }
 
-            return Directory.GetFiles(logDirectory, "*.log", SearchOption.TopDirectoryOnly)
+            return Directory.GetFiles(logDirectory, searchPattern: "*.log", SearchOption.TopDirectoryOnly)
                 .Where(filePath => filePath.Contains("_monitor"))
                 .Where(filePath => new DateTimeOffset(File.GetLastWriteTimeUtc(filePath), TimeSpan.Zero).IsBetween(start, end));
         }
 
-        private async void CleanUpLogFiles(IEnumerable<string> logFilePaths, DateTimeOffset start, DateTimeOffset end)
+        private async Task CleanUpMonitorLogFilesAsync(List<string> logDirectories)
         {
-            var completedLogfilePaths = logFilePaths
-                .Where(filePath => !IsProcessRunning(filePath)) // 다른 프로세스가 사용하지 않는 로그파일 filter
-                .Where(filePath => new DateTimeOffset(File.GetLastWriteTimeUtc(filePath), TimeSpan.Zero).IsBetween(start, end));
-
-            if (completedLogfilePaths.Count() == 0)
+            foreach (var logDirectory in logDirectories)
             {
-                return;
+                if (!Directory.Exists(logDirectory))
+                {
+                    continue;
+                }
+
+                var completedLogfilePaths = Directory.GetFiles(logDirectory, "*.log", SearchOption.TopDirectoryOnly)
+                    .Where(filePath => filePath.Contains("_monitor"))
+                    .Where(filePath => !IsProcessRunning(filePath))
+                    .ToList();
+
+                if (completedLogfilePaths.Count == 0L)
+                {
+                    continue;
+                }
+
+                Logger.Info($"Completed log file: {string.Join("\n", completedLogfilePaths)}");
+
+                try
+                {
+                    var isSuccess = await WebClientService.TerminateMonitoring(new WebClientService.TerminateMonitoringRequest(
+                        fileNames: completedLogfilePaths.Select(filePath => Path.GetFileName(filePath))
+                    ));
+
+                    if (isSuccess)
+                    {
+                        foreach (var filePath in completedLogfilePaths)
+                        {
+                            try
+                            {
+                                File.Delete(filePath);
+                                Logger.Info($"Deleted log file: {filePath}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Warn($"Failed to delete file: {filePath}. Reason: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Fail to terminate monitor log file.\n{e.Message}");
+                }
             }
-
-            Logger.Info($"Completed log files: {string.Join("\n", completedLogfilePaths)}");
-
-            await WebClientService.TerminateMonitoring(new WebClientService.TerminateMonitoringRequest(
-                fileNames: completedLogfilePaths.Select(filePath => Path.GetFileName(filePath))
-            ));
         }
 
-        // Todo 다른 방법을 찾아야함.
         private bool IsProcessRunning(string logFilePath)
         {
             var pattern = @"\[(\d+)\]";
