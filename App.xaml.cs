@@ -52,6 +52,7 @@ namespace MD.BRIDGE
 
             bool isTrayOnly = e.Args.Contains("--tray-only");
             Logger.Info($"Startup mode: {(isTrayOnly ? "Tray only" : "With window")}");
+            InitMainWindow();
 
             if (!isTrayOnly)
             {
@@ -63,12 +64,13 @@ namespace MD.BRIDGE
         {
             _mutex?.ReleaseMutex();
             Logger.Info("Mutex is released. Application exited.");
-            
+
             base.OnExit(e);
         }
 
         private void MenuItem_Open_Click(object sender, RoutedEventArgs e)
         {
+            InitMainWindow();
             ShowMainWindow();
         }
 
@@ -79,18 +81,22 @@ namespace MD.BRIDGE
 
         private void TaskbarIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
+            InitMainWindow();
             ShowMainWindow();
         }
 
         private void ShowMainWindow()
+        {
+            _window.Show();
+        }
+
+        private void InitMainWindow()
         {
             if (_window == null)
             {
                 _window = new MainWindow();
                 _window.DataContext = new MainViewModel(new TaskbarIconService());
             }
-
-            _window.Show();
         }
     }
 }
