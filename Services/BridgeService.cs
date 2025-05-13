@@ -205,17 +205,18 @@ namespace MD.BRIDGE.Services
                 var processId = int.Parse(match.Groups[1].Value);
                 try
                 {
-                    return Process.GetProcesses().Any(p => p.Id == processId && !p.HasExited);
+                    return Process.GetProcesses().Any(p => p.Id == processId);
                 }
-                catch (ArgumentException)
+                catch (Exception e)
                 {
                     // Process has exited
-                    return false;
+                    Logger.Error($"Error checking process with ID {processId}: {e.Message}");
+                    return true;
                 }
             }
 
             // If the pattern does not match, assume the process is not running
-            return false;
+            return true;
         }
     }
 }
