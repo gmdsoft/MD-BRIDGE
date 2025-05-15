@@ -115,7 +115,7 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not connected.
+        ///   Looks up a localized string similar to Waiting.
         /// </summary>
         public static string Footer_ServerStatus_Waiting {
             get {

@@ -196,7 +196,7 @@
     <value>연결 실패</value>
   </data>
   <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
-    <value>연결 안됨</value>
+    <value>대기</value>
   </data>
   <data name="Input_Connection_DefaultServerAddress" xml:space="preserve">
     <value>ex) http://192.168.0.10 또는 http://example.com</value>

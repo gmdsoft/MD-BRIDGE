@@ -136,9 +136,6 @@
   <data name="Footer_ServerStatus_Failed" xml:space="preserve">
     <value>Koneksi gagal</value>
   </data>
-  <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
-    <value>Tidak terhubung</value>
-  </data>
   <data name="Input_Connection_DefaultServerAddress" xml:space="preserve">
     <value>contoh) http://192.168.0.10 atau http://example.com</value>
   </data>
@@ -153,5 +150,8 @@
   </data>
   <data name="MessageBox_Apply_Language_Message" xml:space="preserve">
     <value>Bahasa akan diterapkan setelah memulai ulang aplikasi.</value>
+  </data>
+  <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
+    <value>Menunggu</value>
   </data>
 </root>
