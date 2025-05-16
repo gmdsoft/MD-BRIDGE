@@ -199,7 +199,7 @@
     <value>대기</value>
   </data>
   <data name="Input_Connection_DefaultServerAddress" xml:space="preserve">
-    <value>ex) http://192.168.0.10 또는 http://example.com</value>
+    <value>Ex) http://192.168.0.10 또는 http://example.com</value>
   </data>
   <data name="Input_ServerConnection" xml:space="preserve">
     <value>서버 연결</value>

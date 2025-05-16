@@ -205,7 +205,7 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ex) http://192.168.0.10 or http://example.com.
+        ///   Looks up a localized string similar to Ex) http://192.168.0.10 or http://example.com.
         /// </summary>
         public static string Input_Connection_DefaultServerAddress {
             get {
