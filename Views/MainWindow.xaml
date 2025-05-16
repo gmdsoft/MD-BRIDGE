@@ -257,10 +257,10 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Background" Value="#0B62B0"/>
-            <Setter Property="BorderBrush" Value="#0B62B0"/>
+            <Setter Property="Background" Value="#135DB5"/>
+            <Setter Property="BorderBrush" Value="#135DB5"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
+            <Setter Property="Template"> 
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="ButtonBorder"
@@ -274,14 +274,14 @@
                             <!-- Idle 상태 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ServerConnectionStatus.Idle}">
-                                <Setter Property="Background" Value="#0B62B0"/>
+                                <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
                             </DataTrigger>
                             <!-- Connecting 상태: 로더 + 텍스트 표시 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
-                                <Setter Property="Background" Value="#0B62B0"/>
+                                <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Setter Property="Content">
@@ -320,20 +320,20 @@
                             <!-- 연결 성공 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
-                                <Setter Property="Background" Value="#0B62B0"/>
+                                <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
                             </DataTrigger>
                             <!-- 오류 상태 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ServerConnectionStatus.Init_Error}">
-                                <Setter Property="Background" Value="#0B62B0"/>
+                                <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ServerConnectionStatus.Error}">
-                                <Setter Property="Background" Value="#0B62B0"/>
+                                <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
                             </DataTrigger>
@@ -348,8 +348,8 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Background" Value="#0B62B0"/>
-            <Setter Property="BorderBrush" Value="#0B62B0"/>
+            <Setter Property="Background" Value="#135DB5"/>
+            <Setter Property="BorderBrush" Value="#135DB5"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -364,15 +364,16 @@
                         <ControlTemplate.Triggers>
                             <!-- 마우스 오버 시 -->
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#0A4A8A"/>
+                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#3D82D9"/>
                             </Trigger>
                             <!-- 버튼 클릭 시 -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#083A6D"/>
+                            <Trigger Property="IsPressed" Value="True" >
+                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#0E4C91"/>
                             </Trigger>
                             <!-- 비활성화 상태 -->
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#AAC3D6"/>
+                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#EBF2FA"/>
+                                <Setter Property="Foreground" Value="#A9C4D8"></Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -714,6 +715,7 @@
                                                 Margin="0,30,0,0"
                                                 Width="100"
                                                 Height="35"
+                                                IsEnabled="{Binding CanApplyLanguage}"
                                                 Style="{StaticResource ApplyButtonStyle}"/>
                                     </StackPanel>
                                 </Border>

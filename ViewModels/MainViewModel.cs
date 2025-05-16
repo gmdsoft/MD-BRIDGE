@@ -31,7 +31,8 @@ namespace MD.BRIDGE.ViewModels
         private CancellationTokenSource _cancellationTokenSource;
         private readonly ITaskbarIconService _taskbarIconService;
         private bool isConnecting = false;  // 중복 연결 시도를 방지하는 플래그
-
+        private readonly string _originalLanguage;
+         
         #endregion
 
         #region Properties
@@ -66,13 +67,13 @@ namespace MD.BRIDGE.ViewModels
             get => _selectedLanguage;
             set
             {
-                if (_selectedLanguage != value)
-                {
-                    _selectedLanguage = value;
-                    RaisePropertiesChanged();
-                }
+                if (_selectedLanguage == value) return;
+                _selectedLanguage = value;
+                RaisePropertiesChanged();                     // SelectedLanguage 변경 알림
+                RaisePropertiesChanged(nameof(CanApplyLanguage)); // CanApplyLanguage 변경 알림
             }
         }
+        public bool CanApplyLanguage => SelectedLanguage != _originalLanguage;
 
         private string _footerServerStatusText;
         public string FooterServerStatusText
@@ -116,6 +117,7 @@ namespace MD.BRIDGE.ViewModels
 
             ServerAddress = SettingService.GetServerAddress();
             SelectedLanguage = SettingService.GetCultureInfo().Name;
+            _originalLanguage = SelectedLanguage; // 처음 불러온 언어 저장
 
             FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
 
