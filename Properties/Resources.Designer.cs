@@ -169,7 +169,7 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ⓘ Please enter the server address and click the connect button..
+        ///   Looks up a localized string similar to Enter server address and click [Connect]..
         /// </summary>
         public static string Inline_Connection_IdleMessage {
             get {

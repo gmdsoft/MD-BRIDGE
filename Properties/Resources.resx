@@ -207,7 +207,7 @@
     <value>Server Connection</value>
   </data>
   <data name="Inline_Connection_IdleMessage" xml:space="preserve">
-    <value>ⓘ Please enter the server address and click the connect button.</value>
+    <value>Enter server address and click [Connect].</value>
   </data>
   <data name="Inline_Connection_ConnectingMessage" xml:space="preserve">
     <value>Please wait a moment.</value>
