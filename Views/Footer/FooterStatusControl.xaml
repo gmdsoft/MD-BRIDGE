@@ -32,16 +32,16 @@
                         <Style TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Gray"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Idle}">
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ConnectionStatus.Idle}">
                                     <Setter Property="Foreground" Value="Gray"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ConnectionStatus.Connecting}">
                                     <Setter Property="Foreground" Value="Gray"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ConnectionStatus.Connected}">
                                     <Setter Property="Foreground" Value="Green"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ServerConnectionStatus.Error}">
+                                <DataTrigger Binding="{Binding ConnectionStatus}" Value="{x:Static viewModels:ConnectionStatus.Error}">
                                     <Setter Property="Foreground" Value="Red"/>
                                 </DataTrigger>
                             </Style.Triggers>

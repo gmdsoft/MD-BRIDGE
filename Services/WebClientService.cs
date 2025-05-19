@@ -57,7 +57,6 @@ namespace MD.BRIDGE.Services
         {
             using (var httpClient = GetHttpClient())
             {
-
                 try
                 {
                     var content = new StringContent(

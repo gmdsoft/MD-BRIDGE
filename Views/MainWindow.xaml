@@ -9,6 +9,7 @@
         xmlns:viewModels="clr-namespace:MD.BRIDGE.ViewModels"
         xmlns:footer="clr-namespace:MD.BRIDGE.Views.Footer"
         xmlns:properties="clr-namespace:MD.BRIDGE.Properties"
+        IsVisibleChanged="Window_IsVisibleChanged"
         mc:Ignorable="d"
         WindowStartupLocation="Manual"
         ResizeMode="CanResize"
@@ -157,7 +158,7 @@
 
                             <!-- 연결 성공 시 아이콘 표시 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}"
-                                         Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
+                                         Value="{x:Static viewModels:ConnectionStatus.Connected}">
                                 <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
                                 <Setter TargetName="StatusIcon" Property="Source"
                                         Value="/Assets/icon_connect_success.png"/>
@@ -165,13 +166,13 @@
 
                             <!-- 오류 발생 (Init_Error 포함) -->
                             <DataTrigger Binding="{Binding ConnectionStatus}"
-                                         Value="{x:Static viewModels:ServerConnectionStatus.Error}">
+                                         Value="{x:Static viewModels:ConnectionStatus.Error}">
                                 <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
                                 <Setter TargetName="StatusIcon" Property="Source"
                                         Value="/Assets/icon_connect_fail.png"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ConnectionStatus}"
-                                         Value="{x:Static viewModels:ServerConnectionStatus.Init_Error}">
+                                         Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
                                 <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
                                 <Setter TargetName="StatusIcon" Property="Source"
                                         Value="/Assets/icon_connect_fail.png"/>
@@ -179,12 +180,38 @@
 
                             <!-- 연결 중, Idle 등에서는 아이콘 숨김 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}"
-                                         Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
+                                         Value="{x:Static viewModels:ConnectionStatus.Connecting}">
                                 <Setter TargetName="StatusIcon" Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding ConnectionStatus}"
-                                         Value="{x:Static viewModels:ServerConnectionStatus.Idle}">
+                                         Value="{x:Static viewModels:ConnectionStatus.Idle}">
                                 <Setter TargetName="StatusIcon" Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+
+                            <!-- Idle 상태: 수정 가능 -->
+                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                         Value="{x:Static viewModels:ConnectionStatus.Idle}">
+                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="False"/>
+                            </DataTrigger>
+
+                            <!-- Init_Error 상태: 수정 가능 -->
+                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                         Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
+                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="False"/>
+                            </DataTrigger>
+
+                            <!-- 그 외 상태(Connecting, Connected, Error): 수정 불가 -->
+                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                         Value="{x:Static viewModels:ConnectionStatus.Connected}">
+                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                         Value="{x:Static viewModels:ConnectionStatus.Connecting}">
+                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                         Value="{x:Static viewModels:ConnectionStatus.Error}">
+                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
                             </DataTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -195,7 +222,7 @@
             <Style.Triggers>
                 <!-- 연결 중 -->
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
+                             Value="{x:Static viewModels:ConnectionStatus.Connecting}">
                     <Setter Property="BorderBrush" Value="Gray"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
                     <Setter Property="IsEnabled" Value="True"/>
@@ -203,7 +230,7 @@
 
                 <!-- 연결 성공 -->
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
+                             Value="{x:Static viewModels:ConnectionStatus.Connected}">
                     <Setter Property="BorderBrush" Value="Green"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
                     <Setter Property="IsEnabled" Value="False"/>
@@ -211,13 +238,13 @@
 
                 <!-- 오류 발생 -->
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Init_Error}">
+                             Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
                     <Setter Property="BorderBrush" Value="Red"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
                     <Setter Property="IsEnabled" Value="True"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Error}">
+                             Value="{x:Static viewModels:ConnectionStatus.Error}">
                     <Setter Property="BorderBrush" Value="Red"/>
                     <Setter Property="BorderThickness" Value="3,1,1,1"/>
                     <Setter Property="IsEnabled" Value="True"/>
@@ -232,28 +259,27 @@
             <Style.Triggers>
                 <!-- 연결 중/성공 시 회색 -->
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
+                             Value="{x:Static viewModels:ConnectionStatus.Connecting}">
                     <Setter Property="Foreground" Value="Gray"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
+                             Value="{x:Static viewModels:ConnectionStatus.Connected}">
                     <Setter Property="Foreground" Value="Gray"/>
                 </DataTrigger>
                 <!-- 오류 시 빨간색 -->
                 <DataTrigger Binding="{Binding ConnectionStatus}"
-                             Value="{x:Static viewModels:ServerConnectionStatus.Init_Error}">
+                             Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
                     <Setter Property="Foreground" Value="Red"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ConnectionStatus}" 
-                             Value="{x:Static viewModels:ServerConnectionStatus.Error}">
+                             Value="{x:Static viewModels:ConnectionStatus.Error}">
                     <Setter Property="Foreground" Value="Red"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
         <!-- 서버 연결/중단 버튼 스타일 -->
-        <Style x:Key="ServerConnectButtonStyle" TargetType="Button">
-            <!-- 기본 상태 -->
+        <Style x:Key="ConnectButtonStyle" TargetType="Button">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,6"/>
@@ -271,27 +297,25 @@
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <!-- Idle 상태 -->
+
+                            <!-- ConnectionStatus 상태별 트리거 -->
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
-                                 Value="{x:Static viewModels:ServerConnectionStatus.Idle}">
+                                 Value="{x:Static viewModels:ConnectionStatus.Idle}">
                                 <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
                             </DataTrigger>
-                            <!-- Connecting 상태: 로더 + 텍스트 표시 -->
+
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
-                                 Value="{x:Static viewModels:ServerConnectionStatus.Connecting}">
+                                 Value="{x:Static viewModels:ConnectionStatus.Connecting}">
                                 <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="IsEnabled" Value="False"/>
                                 <Setter Property="Content">
                                     <Setter.Value>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <!-- 로더 영역 -->
                                             <Grid Width="20" Height="20" Margin="0,0,5,0">
-                                                <!-- 배경 원 -->
                                                 <Ellipse Stroke="#4681DB" StrokeThickness="3"/>
-                                                <!-- 회전 애니메이션을 가진 원 -->
                                                 <Ellipse Stroke="White" StrokeThickness="3" StrokeDashArray="12 10">
                                                     <Ellipse.RenderTransform>
                                                         <RotateTransform CenterX="10" CenterY="10"/>
@@ -310,33 +334,76 @@
                                                     </Ellipse.Triggers>
                                                 </Ellipse>
                                             </Grid>
-                                            <!-- 텍스트 영역 -->
                                             <TextBlock Text="{x:Static properties:Resources.Button_Connect}" 
                                                VerticalAlignment="Center" Foreground="White"/>
                                         </StackPanel>
                                     </Setter.Value>
                                 </Setter>
                             </DataTrigger>
-                            <!-- 연결 성공 -->
+
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
-                                 Value="{x:Static viewModels:ServerConnectionStatus.Connected}">
+                                 Value="{x:Static viewModels:ConnectionStatus.Connected}">
                                 <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
                             </DataTrigger>
-                            <!-- 오류 상태 -->
+
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
-                                 Value="{x:Static viewModels:ServerConnectionStatus.Init_Error}">
+                                 Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
                                 <Setter Property="Background" Value="#135DB5"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
                             </DataTrigger>
+
                             <DataTrigger Binding="{Binding ConnectionStatus}" 
-                                 Value="{x:Static viewModels:ServerConnectionStatus.Error}">
-                                <Setter Property="Background" Value="#135DB5"/>
+                                 Value="{x:Static viewModels:ConnectionStatus.Error}">
+                                <Setter Property="Background" Value="#D42A34"/>
                                 <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
+                                <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
                             </DataTrigger>
+
+                            <!-- 일반 Hover 상태 -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1A6DD5"/>
+                            </Trigger>
+
+                            <!-- 일반 Pressed 상태 -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#104A8C"/>
+                            </Trigger>
+
+                            <!-- Error 상태 + Hover -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ConnectionStatus}" 
+                                       Value="{x:Static viewModels:ConnectionStatus.Error}"/>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E05C5C"/>
+                            </MultiDataTrigger>
+
+                            <!-- Error 상태 + Pressed -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ConnectionStatus}" 
+                                       Value="{x:Static viewModels:ConnectionStatus.Error}"/>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#B02A2A"/>
+                            </MultiDataTrigger>
+
+                            <!-- Error 상태 + Disabled -->
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ConnectionStatus}" 
+                                       Value="{x:Static viewModels:ConnectionStatus.Error}"/>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F1A1A1"/>
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#F1A1A1"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </MultiDataTrigger>
+
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -522,11 +589,11 @@
                                                            Margin="0,8,0,0"/>
                                             </StackPanel>
                                             <Button Grid.Column="2"
-                                                    Command="{Binding ConnectToServerCommand}" 
+                                                    Command="{Binding ConnectCommand}" 
                                                     Margin="5,-2,-5,33"
                                                     Width="100"
                                                     Height="35"
-                                                    Style="{StaticResource ServerConnectButtonStyle}"/>
+                                                    Style="{StaticResource ConnectButtonStyle}"/>
                                         </Grid>
                                     </StackPanel>
                                 </Border>

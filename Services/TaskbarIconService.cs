@@ -19,14 +19,20 @@ namespace MD.BRIDGE.Services
 
         public void SetTrayIcon(string iconAssetPath)
         {
-            var packUri = $"pack://application:,,,/{iconAssetPath}";
-            var bitmap = new BitmapImage(new Uri(packUri, UriKind.Absolute));
-            _taskbarIcon.IconSource = bitmap;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var packUri = $"pack://application:,,,/{iconAssetPath}";
+                var bitmap = new BitmapImage(new Uri(packUri, UriKind.Absolute));
+                _taskbarIcon.IconSource = bitmap;
+            });
         }
 
         public void UpdateToolTipMessage(string message)
         {
-            _taskbarIcon.ToolTipText = message;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _taskbarIcon.ToolTipText = message;
+            });
         }
     }
 }

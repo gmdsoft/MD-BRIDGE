@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MD.BRIDGE.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -94,6 +95,14 @@ namespace MD.BRIDGE.Views
 
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                vm.IsWindowVisible = this.IsVisible;
+            }
         }
     }
 }
