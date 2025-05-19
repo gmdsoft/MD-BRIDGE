@@ -628,7 +628,7 @@
                                 <TextBlock FontSize="14" Foreground="Gray" 
                                            Margin="0,5,0,30" TextAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock.Text>
-                                        <MultiBinding StringFormat="Version {0}">
+                                        <MultiBinding StringFormat="v{0}">
                                             <Binding Path="BuildVersionText"/>
                                         </MultiBinding>
                                     </TextBlock.Text>

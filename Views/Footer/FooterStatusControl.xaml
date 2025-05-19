@@ -70,7 +70,7 @@
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right">
                 <TextBlock.Text>
-                    <MultiBinding StringFormat="Version {0}">
+                    <MultiBinding StringFormat="v{0}">
                         <Binding Path="BuildVersionText"/>
                     </MultiBinding>
                 </TextBlock.Text>
