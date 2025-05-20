@@ -20,13 +20,13 @@ namespace MD.BRIDGE.Services
             {
                 string userName = Environment.UserName;
                 return new Dictionary<Product, List<string>>() {
-                    { Product.MD_NEXT, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-NEXT\Log" } },
-                    { Product.MD_RED3, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-RED\Log" } },
-                    { Product.MD_RED4, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-RED4\Log" } },
-                    { Product.MD_VIDEO, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-MEDIA\Log", $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-VIDEO\Log" } },
-                    { Product.MD_LIVE, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-LIVE\Log" } },
-                    { Product.MD_CLOUD, new List<string> {  $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-CLOUD\Log" } },
-                    { Product.MD_DRONE, new List<string> { $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-DRONE\Log" } }
+                    { Product.MD_NEXT, new List<string> { $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-NEXT\Log" } },
+                    { Product.MD_RED3, new List<string> { $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-RED\Log" } },
+                    { Product.MD_RED4, new List<string> { $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-RED4\Log" } },
+                    { Product.MD_VIDEO, new List<string> { $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-MEDIA\Log", $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-VIDEO\Log" } },
+                    { Product.MD_LIVE, new List<string> { $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-LIVE\Log" } },
+                    { Product.MD_CLOUD, new List<string> {  $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-CLOUD\Log" } },
+                    { Product.MD_DRONE, new List<string> { $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-DRONE\Log" } }
                 };
             }
         }
@@ -50,8 +50,7 @@ namespace MD.BRIDGE.Services
         {
             get
             {
-                string userName = Environment.UserName;
-                return $@"C:\Users\{userName}\AppData\Local\MD-Series\MD-BRIDGE\settings.json";
+                return $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-BRIDGE\settings.json";
             }
         }
 
