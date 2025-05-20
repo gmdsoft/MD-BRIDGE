@@ -213,6 +213,10 @@
     <value>Please wait a moment.</value>
   </data>
   <data name="MessageBox_Apply_Language_Message" xml:space="preserve">
-    <value>The language will be applied after restarting the application.</value>
+    <value>You must restart the program to change the language.
+Do you want to restart now?</value>
+  </data>
+  <data name="MessageBox_Apply_Language_Title" xml:space="preserve">
+    <value>Change Settings</value>
   </data>
 </root>

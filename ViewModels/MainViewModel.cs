@@ -1,16 +1,17 @@
-﻿using System;
+﻿using DevExpress.Mvvm;
+using LogModule;
+using MD.BRIDGE.Properties;
+using MD.BRIDGE.Services;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using DevExpress.Mvvm;
-using LogModule;
-using MD.BRIDGE.Properties;
-using MD.BRIDGE.Services;
 
 namespace MD.BRIDGE.ViewModels
 {
@@ -306,12 +307,20 @@ namespace MD.BRIDGE.ViewModels
 
         private void ExecuteApplyLanguageCommand()
         {
-            MessageBox.Show(Resources.MessageBox_Apply_Language_Message);
-            Logger.Info($"Selected language: {SelectedLanguage}");
-            var newCulture = new CultureInfo(SelectedLanguage);
-            SettingService.SetCultureInfo(newCulture);
+            MessageBoxResult result = System.Windows.MessageBox.Show(
+                Resources.MessageBox_Apply_Language_Message,
+                Resources.MessageBox_Apply_Language_Title,
+                MessageBoxButton.YesNo
+            );
 
-            RestartApplication();
+            if (result == MessageBoxResult.Yes)
+            {
+                Logger.Info($"Selected language: {SelectedLanguage}");
+                var newCulture = new CultureInfo(SelectedLanguage);
+                SettingService.SetCultureInfo(newCulture);
+
+                RestartApplication();
+            }
         }
 
         private void RestartApplication()

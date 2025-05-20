@@ -241,11 +241,21 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The language will be applied after restarting the application..
+        ///   Looks up a localized string similar to You must restart the program to change the language.
+        ///Do you want to restart now?.
         /// </summary>
         public static string MessageBox_Apply_Language_Message {
             get {
                 return ResourceManager.GetString("MessageBox_Apply_Language_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Settings.
+        /// </summary>
+        public static string MessageBox_Apply_Language_Title {
+            get {
+                return ResourceManager.GetString("MessageBox_Apply_Language_Title", resourceCulture);
             }
         }
         

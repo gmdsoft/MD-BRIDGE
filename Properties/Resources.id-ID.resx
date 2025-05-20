@@ -149,9 +149,13 @@
     <value>Tolong tunggu sebentar.</value>
   </data>
   <data name="MessageBox_Apply_Language_Message" xml:space="preserve">
-    <value>Bahasa akan diterapkan setelah memulai ulang aplikasi.</value>
+    <value>Anda harus memulai ulang program untuk mengubah bahasa.
+Apakah Anda ingin memulai ulang sekarang?</value>
   </data>
   <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
     <value>Menunggu</value>
+  </data>
+  <data name="MessageBox_Apply_Language_Title" xml:space="preserve">
+    <value>Ubah Pengaturan</value>
   </data>
 </root>
