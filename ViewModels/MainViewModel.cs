@@ -356,7 +356,7 @@ namespace MD.BRIDGE.ViewModels
                 UpdateAvailabilityStatus = UpdateAvailabilityStatus.UpToDate;
             }
 
-            if (UpdateAvailabilityStatus == UpdateAvailabilityStatus.UpToDate)
+            if (UpdateAvailabilityStatus == UpdateAvailabilityStatus.ReadyToUpdate)
             {
                 _taskbarIconService.SetTrayIcon("Assets/tray_updatable.png");
             }
