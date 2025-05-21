@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using LogModule;
 using MD.Platform.Log;
 using Newtonsoft.Json;
@@ -11,21 +12,34 @@ namespace MD.BRIDGE.Services
 {
     static public class WebClientService
     {
-        public static async Task<bool> CheckConnection()
+        public static async Task<Result<GetLatestMdBridgeVersionResponse>> CheckServerHealthAndGetVersion()
         {
-
             using (var httpClient = GetHttpClient())
             {
                 try
                 {
                     httpClient.Timeout = TimeSpan.FromSeconds(2);
                     HttpResponseMessage response = await httpClient.GetAsync("/api/v1/monitoring/ready");
-                    return response.IsSuccessStatusCode;
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return Result.Failure<GetLatestMdBridgeVersionResponse>($"Health check failed with status code: {response.StatusCode}");
+                    }
+
+                    string content = await response.Content.ReadAsStringAsync();
+
+                    var versionInfo = JsonConvert.DeserializeObject<GetLatestMdBridgeVersionResponse>(content);
+                    if (versionInfo == null)
+                    {
+                        return Result.Failure<GetLatestMdBridgeVersionResponse>("Failed to deserialize version info.");
+                    }
+
+                    return Result.Success(versionInfo);
                 }
                 catch (Exception e)
                 {
-                    Logger.Error($"Fail to connect to server.\n{e.Message}");
-                    return false;
+                    Logger.Error($"Exception occurred during health check/version fetch:\n{e.Message}");
+                    return Result.Failure<GetLatestMdBridgeVersionResponse>($"Exception: {e.Message}");
                 }
             }
         }
@@ -114,6 +128,14 @@ namespace MD.BRIDGE.Services
             }
         }
 
+        public class GetLatestMdBridgeVersionResponse
+        {
+            [JsonProperty("fileId")]
+            public string FileId { get; private set; }
+            [JsonProperty("latestVersion")]
+            public string LatestVersion { get; private set; }
+        }
+
         private static HttpClient GetHttpClient()
         {
             var httpClient = new HttpClient();
@@ -123,7 +145,7 @@ namespace MD.BRIDGE.Services
             }
             catch
             { }
-            
+
             return httpClient;
         }
     }

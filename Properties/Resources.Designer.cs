@@ -79,11 +79,38 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Button_Download {
+            get {
+                return ResourceManager.GetString("Button_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Stop.
         /// </summary>
         public static string Button_Stop {
             get {
                 return ResourceManager.GetString("Button_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect server to download.
+        /// </summary>
+        public static string Footer_ConnectServerToDownloadMessage {
+            get {
+                return ResourceManager.GetString("Footer_ConnectServerToDownloadMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest version update required.
+        /// </summary>
+        public static string Footer_NeedUpdateMessage {
+            get {
+                return ResourceManager.GetString("Footer_NeedUpdateMessage", resourceCulture);
             }
         }
         

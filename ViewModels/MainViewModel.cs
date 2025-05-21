@@ -10,35 +10,35 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace MD.BRIDGE.ViewModels
 {
-    public enum ConnectionStatus
-    {
-        Idle,
-        Connecting,
-        Connected,
-        Error,       // 연결 실패
-        Init_Error   // 최초 연결 실패
-    }
+    public enum ConnectionStatus { Idle, Connecting, Connected, Error, Init_Error }
+
+    public enum UpdateAvailabilityStatus { UpToDate, ReadyToUpdate, Blocked }
 
     public class MainViewModel : BindableBase
     {
         #region Fields & Constants
 
         private readonly BridgeService _bridgeService;
-        private CancellationTokenSource _cancellationTokenSource;
         private readonly ITaskbarIconService _taskbarIconService;
+
+        private CancellationTokenSource _cancellationTokenSource;
+
         private readonly string _originalLanguage;
         private bool _isInit = true;
+        private string _latestVersion;
+        private string _latestVersionFileId;
 
         #endregion
 
         #region Properties
+
         // 지연시간 상수 (밀리초)
-        private const int MonitorConnectionDelay = 5000;
+        private const int ServerHealthCheckDelay = 5000;
+        private const int RetryWhenHiddenDelay = 5000;
 
         private bool _isWindowVisible;
         public bool IsWindowVisible
@@ -46,11 +46,33 @@ namespace MD.BRIDGE.ViewModels
             get => _isWindowVisible;
             set
             {
-                if (_isWindowVisible != value)
-                {
-                    _isWindowVisible = value;
-                    RaisePropertiesChanged();
-                }
+                if (_isWindowVisible == value) return;
+                _isWindowVisible = value;
+                RaisePropertiesChanged();
+            }
+        }
+
+        private ConnectionStatus _connectionStatus;
+        public ConnectionStatus ConnectionStatus
+        {
+            get => _connectionStatus;
+            set
+            {
+                if (_connectionStatus == value) return;
+                _connectionStatus = value;
+                RaisePropertiesChanged();
+            }
+        }
+
+        private UpdateAvailabilityStatus _updateAvailabilityStatus;
+        public UpdateAvailabilityStatus UpdateAvailabilityStatus
+        {
+            get => _updateAvailabilityStatus;
+            set
+            {
+                if (_updateAvailabilityStatus == value) return;
+                _updateAvailabilityStatus = value;
+                RaisePropertiesChanged();
             }
         }
 
@@ -58,21 +80,24 @@ namespace MD.BRIDGE.ViewModels
         public string ServerAddress
         {
             get => _serverAddress;
-            set { _serverAddress = value; RaisePropertiesChanged(); }
-        }
-
-        private ConnectionStatus _connectionStatus;
-        public ConnectionStatus ConnectionStatus
-        {
-            get => _connectionStatus;
-            set { _connectionStatus = value; RaisePropertiesChanged(); }
+            set
+            {
+                if (_serverAddress == value) return;
+                _serverAddress = value;
+                RaisePropertiesChanged();
+            }
         }
 
         private string _connectionStatusDetailText;
         public string ConnectionStatusDetailText
         {
             get => _connectionStatusDetailText;
-            set { _connectionStatusDetailText = value; RaisePropertiesChanged(); }
+            set
+            {
+                if (_connectionStatusDetailText == value) return;
+                _connectionStatusDetailText = value;
+                RaisePropertiesChanged();
+            }
         }
 
         private string _selectedLanguage;
@@ -83,8 +108,8 @@ namespace MD.BRIDGE.ViewModels
             {
                 if (_selectedLanguage == value) return;
                 _selectedLanguage = value;
-                RaisePropertiesChanged();                     // SelectedLanguage 변경 알림
-                RaisePropertiesChanged(nameof(CanApplyLanguage)); // CanApplyLanguage 변경 알림
+                RaisePropertiesChanged();
+                RaisePropertiesChanged(nameof(CanApplyLanguage));
             }
         }
         public bool CanApplyLanguage => SelectedLanguage != _originalLanguage;
@@ -93,21 +118,24 @@ namespace MD.BRIDGE.ViewModels
         public string FooterServerStatusText
         {
             get => _footerServerStatusText;
-            set { _footerServerStatusText = value; RaisePropertiesChanged(); }
+            set
+            {
+                if (_footerServerStatusText == value) return;
+                _footerServerStatusText = value;
+                RaisePropertiesChanged();
+            }
         }
 
-        private string _versionText;
-        public string VersionText
+        private string _version;
+        public string Version
         {
-            get => _versionText;
-            set { _versionText = value; RaisePropertiesChanged(); }
-        }
-
-        private string _buildVersionText;
-        public string BuildVersionText
-        {
-            get => _buildVersionText;
-            set { _buildVersionText = value; RaisePropertiesChanged(); }
+            get => _version;
+            set
+            {
+                if (_version == value) return;
+                _version = value;
+                RaisePropertiesChanged();
+            }
         }
 
         #endregion
@@ -116,6 +144,7 @@ namespace MD.BRIDGE.ViewModels
 
         public ICommand ConnectCommand { get; }
         public ICommand ApplyLanguageCommand { get; }
+        public ICommand DownloadCommand { get; }
 
         #endregion
 
@@ -128,6 +157,7 @@ namespace MD.BRIDGE.ViewModels
 
             ConnectCommand = new DelegateCommand(ExecuteConnectCommand);
             ApplyLanguageCommand = new DelegateCommand(ExecuteApplyLanguageCommand);
+            DownloadCommand = new DelegateCommand(ExecuteDownloadCommand);
 
             ServerAddress = SettingService.GetServerAddress();
             SelectedLanguage = SettingService.GetCultureInfo().Name;
@@ -135,16 +165,16 @@ namespace MD.BRIDGE.ViewModels
 
             FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
 
-            Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            VersionText = "v" + version;
-
             // 빌드 버전 정보
             FileVersionInfo buildVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-            BuildVersionText = buildVersion.FileVersion;
+            Version = buildVersion.FileVersion;
+            _latestVersion = buildVersion.FileVersion;
 
             StartBridgeService();
-            _ = CheckServerHealth();
-            _ = RetryWhenHidden();
+
+            // Backgound tasks
+            Task.Run(() => ServerHealthCheckTask());
+            Task.Run(() => RetryWhenHiddenTask());
         }
 
         #endregion
@@ -165,44 +195,47 @@ namespace MD.BRIDGE.ViewModels
             ResetCancellationToken();
             await StopBridgeServiceAsync();
 
-            SetConnectingStatus();
-            var isHealthy = await CheckHealth();
+            SetState(ConnectionStatus.Connecting);
+            var isHealthy = await CheckServerHealth();
 
             if (isHealthy)
             {
+                await Task.Delay(TimeSpan.FromSeconds(value: 0.3));
                 _ = _bridgeService.RunAsync();
-                SetConnectedStatus();
+                SetState(ConnectionStatus.Connected);
             }
             else
             {
                 if (_isInit)
                 {
-                    SetInitErrorStatus();
+                    SetState(ConnectionStatus.Init_Error);
                 }
                 else
                 {
-                    SetErrorStatus();
+                    SetState(ConnectionStatus.Error);
                 }
             }
         }
 
-        private async Task CheckServerHealth()
+        private async Task ServerHealthCheckTask()
         {
             try
             {
                 while (true)
                 {
-                    await Task.Delay(MonitorConnectionDelay);
+                    await Task.Delay(ServerHealthCheckDelay);
 
                     if (ConnectionStatus == ConnectionStatus.Connected)
                     {
-                        var isHealthy = await CheckHealth();
+                        var isHealthy = await CheckServerHealth();
 
                         if (!isHealthy)
                         {
-                            SetErrorStatus();
+                            SetState(ConnectionStatus.Error);
                             StopBridgeService();
                         }
+
+                        RefreshUpdateAvailabilityStatus();
                     }
                 }
             }
@@ -212,13 +245,13 @@ namespace MD.BRIDGE.ViewModels
             }
         }
 
-        private async Task RetryWhenHidden()
+        private async Task RetryWhenHiddenTask()
         {
             try
             {
                 while (true)
                 {
-                    await Task.Delay(MonitorConnectionDelay);
+                    await Task.Delay(RetryWhenHiddenDelay);
 
                     if (IsWindowVisible)
                     {
@@ -254,19 +287,24 @@ namespace MD.BRIDGE.ViewModels
             await _bridgeService.WaitForCompletion();
         }
 
-        private async Task<bool> CheckHealth()
+        private async Task<bool> CheckServerHealth()
         {
-            bool isConnectable = false;
-            try
+            var result = await WebClientService.CheckServerHealthAndGetVersion();
+
+            if (result.IsFailure)
             {
-                isConnectable = await WebClientService.CheckConnection();
-            }
-            catch (Exception)
-            {
-                Logger.Info("Cloud not connect to server");
+                Logger.Info($"Server health check failed: {result.Error}");
+                return false;
             }
 
-            return isConnectable;
+            // 최신 버전 갱신
+            if (result.Value.LatestVersion != null)
+            {
+                _latestVersion = result.Value.LatestVersion;
+                _latestVersionFileId = result.Value.FileId;
+            }
+
+            return true;
         }
 
         private async void StopBridgeService()
@@ -278,6 +316,50 @@ namespace MD.BRIDGE.ViewModels
             _cancellationTokenSource?.Dispose();
             _cancellationTokenSource = null;
             Logger.Debug("Cancel and dispose CancellationTokenSource.");
+        }
+
+        private bool HasUpdataVersion()
+        {
+            if (string.IsNullOrWhiteSpace(_latestVersion) || string.IsNullOrWhiteSpace(_latestVersionFileId))
+            {
+                return false;
+            }
+
+            try
+            {
+                var current = new Version(this.Version);
+                var latest = new Version(_latestVersion);
+
+                // latest 가 current 보다 크면 업데이트 가능
+                return latest.CompareTo(current) > 0;
+            }
+            catch (ArgumentException)
+            {
+                // 문자열 포맷이 잘못되었거나 빈 값일 때
+                return false;
+            }
+            catch (OverflowException)
+            {
+                // 버전 숫자가 너무 커서 파싱 불가할 때
+                return false;
+            }
+        }
+
+        private void RefreshUpdateAvailabilityStatus()
+        {
+            if (HasUpdataVersion())
+            {
+                UpdateAvailabilityStatus = ConnectionStatus == ConnectionStatus.Connected ? UpdateAvailabilityStatus.ReadyToUpdate : UpdateAvailabilityStatus.Blocked;
+            }
+            else
+            {
+                UpdateAvailabilityStatus = UpdateAvailabilityStatus.UpToDate;
+            }
+
+            if (UpdateAvailabilityStatus == UpdateAvailabilityStatus.UpToDate)
+            {
+                _taskbarIconService.SetTrayIcon("Assets/tray_updatable.png");
+            }
         }
 
         #endregion
@@ -293,11 +375,11 @@ namespace MD.BRIDGE.ViewModels
             if (ConnectionStatus == ConnectionStatus.Connected)
             {
                 StopBridgeService();
-                SetIdleState();
+                SetState(ConnectionStatus.Idle);
             }
             else if (ConnectionStatus == ConnectionStatus.Error)
             {
-                SetIdleState();
+                SetState(ConnectionStatus.Idle);
             }
             else
             {
@@ -321,6 +403,18 @@ namespace MD.BRIDGE.ViewModels
 
                 RestartApplication();
             }
+        }
+
+        private void ExecuteDownloadCommand()
+        {
+            Logger.Info("Downloading latest version.");
+            var downloadUrl = $"{ServerAddress}/api/v1/files/download/{_latestVersionFileId}";
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = downloadUrl,
+                UseShellExecute = true
+            });
         }
 
         private void RestartApplication()
@@ -359,73 +453,68 @@ namespace MD.BRIDGE.ViewModels
 
         #endregion
 
-        #region Status Helpers
+        #region Status Setter
 
-        private void SetIdleState()
+        private void SetState(ConnectionStatus status)
         {
-            Logger.Info("Setting idle state.");
+            Logger.Info($"Setting state: {status}");
+            switch (status)
+            {
+                case ConnectionStatus.Idle:
+                    _taskbarIconService.SetTrayIcon("Assets/tray_waiting.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_IdleMessage);
 
-            _taskbarIconService.SetTrayIcon("Assets/tray_waiting.png");
-            _taskbarIconService.UpdateToolTipMessage(Resources.Tray_IdleMessage);
+                    ConnectionStatusDetailText = Resources.Inline_Connection_IdleMessage;
+                    FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
 
-            ConnectionStatusDetailText = Resources.Inline_Connection_IdleMessage;
-            FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
+                    ConnectionStatus = ConnectionStatus.Idle;
+                    break;
 
-            ConnectionStatus = ConnectionStatus.Idle;
+                case ConnectionStatus.Connecting:
+                    _taskbarIconService.SetTrayIcon("Assets/tray_normal.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectingMessage);
+
+                    ConnectionStatusDetailText = Resources.Inline_Connection_ConnectingMessage;
+                    FooterServerStatusText = Resources.Footer_ServerStatus_Connecting;
+
+                    ConnectionStatus = ConnectionStatus.Connecting;
+                    break;
+
+                case ConnectionStatus.Connected:
+                    _taskbarIconService.SetTrayIcon("Assets/tray_connected.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectedMessage);
+
+                    ConnectionStatusDetailText = Resources.Inline_Connection_DefaultMessage;
+                    FooterServerStatusText = Resources.Footer_ServerStatus_Connected;
+
+                    ConnectionStatus = ConnectionStatus.Connected;
+                    _isInit = false;
+                    break;
+
+                case ConnectionStatus.Error:
+                    _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
+
+                    ConnectionStatusDetailText = Resources.Inline_Connection_ErrorMessage;
+                    FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
+
+                    ConnectionStatus = ConnectionStatus.Error;
+                    break;
+
+                case ConnectionStatus.Init_Error:
+                    _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
+
+                    ConnectionStatusDetailText = Resources.Inline_Connection_initErrorMessage;
+                    FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
+
+                    ConnectionStatus = ConnectionStatus.Init_Error;
+                    break;
+            }
+
+            RefreshUpdateAvailabilityStatus();
         }
 
-        private void SetConnectingStatus()
-        {
-            Logger.Info("Setting connecting status.");
-
-            _taskbarIconService.SetTrayIcon("Assets/tray_normal.png");
-            _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectingMessage);
-
-            ConnectionStatusDetailText = Resources.Inline_Connection_ConnectingMessage;
-            FooterServerStatusText = Resources.Footer_ServerStatus_Connecting;
-
-            ConnectionStatus = ConnectionStatus.Connecting;
-        }
-
-        private void SetConnectedStatus()
-        {
-            Logger.Info("Setting connected status.");
-
-            _taskbarIconService.SetTrayIcon("Assets/tray_connected.png");
-            _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectedMessage);
-
-            ConnectionStatusDetailText = Resources.Inline_Connection_DefaultMessage;
-            FooterServerStatusText = Resources.Footer_ServerStatus_Connected;
-
-            ConnectionStatus = ConnectionStatus.Connected;
-            _isInit = false;
-        }
-
-        private void SetErrorStatus()
-        {
-            Logger.Info("Setting error status.");
-
-            _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
-            _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
-
-            ConnectionStatusDetailText = Resources.Inline_Connection_ErrorMessage;
-            FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
-
-            ConnectionStatus = ConnectionStatus.Error;
-        }
-
-        private void SetInitErrorStatus()
-        {
-            Logger.Info("Setting initial error status.");
-
-            _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
-            _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
-
-            ConnectionStatusDetailText = Resources.Inline_Connection_initErrorMessage;
-            FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
-
-            ConnectionStatus = ConnectionStatus.Init_Error;
-        }
 
         #endregion
     }

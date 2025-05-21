@@ -629,7 +629,7 @@
                                            Margin="0,5,0,30" TextAlignment="Center" HorizontalAlignment="Center">
                                     <TextBlock.Text>
                                         <MultiBinding StringFormat="v{0}">
-                                            <Binding Path="BuildVersionText"/>
+                                            <Binding Path="Version"/>
                                         </MultiBinding>
                                     </TextBlock.Text>
                                 </TextBlock>

@@ -219,4 +219,13 @@ Do you want to restart now?</value>
   <data name="MessageBox_Apply_Language_Title" xml:space="preserve">
     <value>Change Settings</value>
   </data>
+  <data name="Footer_NeedUpdateMessage" xml:space="preserve">
+    <value>Latest version update required</value>
+  </data>
+  <data name="Button_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Footer_ConnectServerToDownloadMessage" xml:space="preserve">
+    <value>Connect server to download</value>
+  </data>
 </root>

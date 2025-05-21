@@ -208,5 +208,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\tray_updatable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\footer_updatable.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
             <!-- 왼쪽 -->
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <TextBlock Text="●"
                            VerticalAlignment="Center"
                            Margin="15,0,0,0"
@@ -61,20 +61,125 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Left"/>
             </StackPanel>
-            
+
             <!-- 오른쪽 -->
-            <TextBlock Margin="0,0,15,0"
-                       FontSize="12"
-                       Foreground="Gray"
-                       Grid.Column="1"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Right">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="v{0}">
-                        <Binding Path="BuildVersionText"/>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
+            <Grid Grid.Column="1" HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,15,0">
+
+                    <!-- 버전 표시 -->
+                    <TextBlock FontSize="12"
+                               Foreground="Gray"
+                               VerticalAlignment="Center"
+                               Text="{Binding Version, StringFormat=v{0}}"/>
+
+                    <!-- 업데이트 가능 영역: UpToDate 일 땐 숨기고, ReadyToUpdate/Blocked 에선 보이기 -->
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,0,0"
+                                VerticalAlignment="Center">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding UpdateAvailabilityStatus}" Value="ReadyToUpdate">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding UpdateAvailabilityStatus}" Value="Blocked">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <!-- 업데이트 아이콘 -->
+                        <Image Source="/Assets/footer_updatable.png" Width="14" Height="14"/>
+
+                        <!-- 상태별 메시지 -->
+                        <TextBlock FontSize="12"
+                                   Foreground="#E67700"
+                                   VerticalAlignment="Center"
+                                   Margin="5,0,0,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <!-- 상위 버전 있고 서버 연결 완료 -->
+                                        <DataTrigger Binding="{Binding UpdateAvailabilityStatus}" Value="ReadyToUpdate">
+                                            <Setter Property="Text" Value="{x:Static properties:Resources.Footer_NeedUpdateMessage}"/>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <!-- 상위 버전 있고 서버 연결 안됨 -->
+                                        <DataTrigger Binding="{Binding UpdateAvailabilityStatus}" Value="Blocked">
+                                            <Setter Property="Text" Value="{x:Static properties:Resources.Footer_ConnectServerToDownloadMessage}"/>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <!-- 다운로드 버튼 -->
+                        <Button Padding="0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Margin="10,0,0,0"
+                                Command="{Binding DownloadCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding UpdateAvailabilityStatus}" Value="ReadyToUpdate">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <!-- 버튼 비주얼 리소스(기존 그대로) -->
+                            <Button.Resources>
+                                <Style TargetType="Border" x:Key="DownloadButtonBorderStyle">
+                                    <Setter Property="BorderBrush" Value="#DFE0E4"/>
+                                    <Setter Property="Background" Value="White"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                            <Setter Property="BorderBrush" Value="#5D6069"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                            <Setter Property="BorderBrush" Value="#484B52"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style TargetType="TextBlock" x:Key="DownloadButtonTextStyle">
+                                    <Setter Property="Foreground" Value="#495057"/>
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                            <Setter Property="Foreground" Value="#5A6268"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsPressed, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
+                                            <Setter Property="Foreground" Value="#3D4348"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Resources>
+
+                            <Border CornerRadius="13"
+                                    BorderThickness="1.5"
+                                    Padding="12,5"
+                                    SnapsToDevicePixels="True"
+                                    Style="{StaticResource DownloadButtonBorderStyle}">
+                                <TextBlock Text="{x:Static properties:Resources.Button_Download}"
+                               FontSize="12"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource DownloadButtonTextStyle}"/>
+                            </Border>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>
