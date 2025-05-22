@@ -97,7 +97,7 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect server to download.
+        ///   Looks up a localized string similar to Connect to the server to download.
         /// </summary>
         public static string Footer_ConnectServerToDownloadMessage {
             get {

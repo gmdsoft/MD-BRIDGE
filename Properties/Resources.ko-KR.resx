@@ -224,6 +224,6 @@
     <value>다운로드</value>
   </data>
   <data name="Footer_ConnectServerToDownloadMessage" xml:space="preserve">
-    <value>다운로드 받으려면 서버를 연결하세요</value>
+    <value>다운로드하려면 서버에 연결하세요</value>
   </data>
 </root>

@@ -226,6 +226,6 @@ Do you want to restart now?</value>
     <value>Download</value>
   </data>
   <data name="Footer_ConnectServerToDownloadMessage" xml:space="preserve">
-    <value>Connect server to download</value>
+    <value>Connect to the server to download</value>
   </data>
 </root>

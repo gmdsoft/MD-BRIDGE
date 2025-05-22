@@ -165,6 +165,6 @@ Apakah Anda ingin memulai ulang sekarang?</value>
     <value>unduh</value>
   </data>
   <data name="Footer_ConnectServerToDownloadMessage" xml:space="preserve">
-    <value>Hubungkan server untuk diunduh</value>
+    <value>Hubungkan ke server untuk diunduh</value>
   </data>
 </root>
