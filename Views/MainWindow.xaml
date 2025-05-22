@@ -768,9 +768,9 @@
                                                         </Style>
                                                     </ComboBox.Style>
                                                     <!-- 언어 옵션 -->
-                                                    <ComboBoxItem Content="한국어" Tag="ko-KR"/>
-                                                    <ComboBoxItem Content="English" Tag="en-US"/>
-                                                    <ComboBoxItem Content="Bahasa Indonesia" Tag="id-ID"/>
+                                                    <ComboBoxItem Content="Bahasa Indonésia (Indonesian) (Beta)" Tag="id-ID"/>
+                                                    <ComboBoxItem Content="English (English)" Tag="en-US"/>
+                                                    <ComboBoxItem Content="한국어 (Korean)" Tag="ko-KR"/>
                                                 </ComboBox>
                                             </StackPanel>
                                             <!-- 언어 선택 안내 문구 -->
