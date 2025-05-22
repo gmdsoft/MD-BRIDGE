@@ -1,4 +1,5 @@
-﻿using MD.BRIDGE.Utils;
+﻿using LogModule;
+using MD.BRIDGE.Utils;
 using MD.Platform.Log;
 using Newtonsoft.Json;
 using System;
@@ -51,54 +52,6 @@ namespace MD.BRIDGE.Services
             get
             {
                 return $@"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\MD-Series\MD-BRIDGE\settings.json";
-            }
-        }
-
-        private static SettingsModel LoadSettings()
-        {
-            lock (_fileLock)
-            {
-                SettingsModel setting = File.Exists(_settingPath)
-                    ? JsonConvert.DeserializeObject<SettingsModel>(File.ReadAllText(_settingPath)) // 기존 설정 불러오기
-                    : new SettingsModel
-                    {
-                        ServerAddress = DefaultServerAddress,
-                        ProductLogDirectories = _productLogDirectories,
-                        CultureInfo = _defaultCurlture,
-                        ProductOffsets = _defaultProductOffsets
-                    };
-
-                // 실제 설치된 제품만 설정에 포함
-                setting.ProductLogDirectories = _productLogDirectories
-                    .Where(kvp => kvp.Value.Any(Directory.Exists))
-                    .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => kvp.Value.Where(Directory.Exists).ToList()
-                    );
-
-                setting.ProductOffsets = setting.ProductLogDirectories
-                    .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => setting.ProductOffsets.ContainsKey(kvp.Key) ? setting.ProductOffsets[kvp.Key] : _defaultProductOffsets[kvp.Key]
-                    );
-
-                SaveSettings(setting);
-                return setting;
-            }
-        }
-
-        private static void SaveSettings(SettingsModel settings)
-        {
-            lock (_fileLock)
-            {
-                var directoryPath = Path.GetDirectoryName(_settingPath);
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                var jsonString = JsonConvert.SerializeObject(settings, Formatting.Indented);
-                File.WriteAllText(_settingPath, jsonString);
             }
         }
 
@@ -159,6 +112,75 @@ namespace MD.BRIDGE.Services
             var settings = LoadSettings();
             settings.CultureInfo = culture;
             SaveSettings(settings);
+        }
+
+        private static SettingsModel LoadSettings()
+        {
+            lock (_fileLock)
+            {
+                var setting = GetOrDefalutSettings();
+
+                // 실제 설치된 제품만 설정에 포함
+                setting.ProductLogDirectories = _productLogDirectories
+                    .Where(kvp => kvp.Value.Any(Directory.Exists))
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Where(Directory.Exists).ToList()
+                    );
+
+                setting.ProductOffsets = setting.ProductLogDirectories
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => setting.ProductOffsets.ContainsKey(kvp.Key) ? setting.ProductOffsets[kvp.Key] : _defaultProductOffsets[kvp.Key]
+                    );
+
+                SaveSettings(setting);
+                return setting;
+            }
+        }
+
+        private static SettingsModel GetOrDefalutSettings()
+        {
+            if (!File.Exists(_settingPath))
+                return CreateDefaultSettings();
+
+            try
+            {
+                var json = File.ReadAllText(_settingPath);
+                return JsonConvert.DeserializeObject<SettingsModel>(json)
+                       ?? CreateDefaultSettings();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to load settings: {ex.Message}");
+                return CreateDefaultSettings();
+            }
+        }
+
+        private static SettingsModel CreateDefaultSettings()
+        {
+            return new SettingsModel
+            {
+                ServerAddress = DefaultServerAddress,
+                ProductLogDirectories = _productLogDirectories,
+                CultureInfo = _defaultCurlture,
+                ProductOffsets = _defaultProductOffsets
+            };
+        }
+
+        private static void SaveSettings(SettingsModel settings)
+        {
+            lock (_fileLock)
+            {
+                var directoryPath = Path.GetDirectoryName(_settingPath);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                var jsonString = JsonConvert.SerializeObject(settings, Formatting.Indented);
+                File.WriteAllText(_settingPath, jsonString);
+            }
         }
     }
 }
