@@ -87,10 +87,6 @@ namespace MD.BRIDGE.Services
 
             /** Serach log files */
             var logFilePaths = logDirectories.SelectMany(logDirectory => GetMonitorLogFilePaths(logDirectory: logDirectory, start: offset, end: now));
-            if (logFilePaths.Count() == 0)
-            {
-                return;
-            }
 
             var pathToRecords = logFilePaths.ToDictionary(
                 logFilePath => logFilePath,
