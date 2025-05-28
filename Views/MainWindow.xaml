@@ -768,8 +768,8 @@
                                                         </Style>
                                                     </ComboBox.Style>
                                                     <!-- 언어 옵션 -->
-                                                    <ComboBoxItem Content="Bahasa Indonésia (Indonesian) (Beta)" Tag="id-ID"/>
                                                     <ComboBoxItem Content="English (English)" Tag="en-US"/>
+                                                    <ComboBoxItem Content="Bahasa Indonésia (Indonesian) (Beta)" Tag="id-ID"/>
                                                     <ComboBoxItem Content="한국어 (Korean)" Tag="ko-KR"/>
                                                 </ComboBox>
                                             </StackPanel>
