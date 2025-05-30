@@ -22,103 +22,108 @@
         Height="640">
     <!-- 리소스: 모든 UI 스타일 및 컨버터를 한곳에 모음 -->
     <Window.Resources>
-        <!-- ========================================================= -->
-        <!--                      UI 스타일 리소스                       -->
-        <!-- ========================================================= -->
-        <!-- 탭 컨트롤(헤더용) 스타일 -->
-        <Style x:Key="TabControlHeaderStyle" TargetType="TabControl">
-            <Setter Property="TabStripPlacement" Value="Left"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TabControl}">
-                        <Grid x:Name="TemplateRoot" ClipToBounds="True" SnapsToDevicePixels="True">
-                            <Grid.ColumnDefinitions>
-                                <!-- 탭 헤더 영역 너비 -->
-                                <ColumnDefinition Width="75"/>
-                            </Grid.ColumnDefinitions>
-                            <!-- 탭 버튼들을 호스팅하는 TabPanel -->
-                            <TabPanel x:Name="HeaderPanel"
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/MD-BRIDGE;component/Assets/Tab_Icons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- ========================================================= -->
+            <!--                      UI 스타일 리소스                       -->
+            <!-- ========================================================= -->
+            <!-- 탭 컨트롤(헤더용) 스타일 -->
+            <Style x:Key="TabControlHeaderStyle" TargetType="TabControl">
+                <Setter Property="TabStripPlacement" Value="Left"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabControl}">
+                            <Grid x:Name="TemplateRoot" ClipToBounds="True" SnapsToDevicePixels="True">
+                                <Grid.ColumnDefinitions>
+                                    <!-- 탭 헤더 영역 너비 -->
+                                    <ColumnDefinition Width="75"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- 탭 버튼들을 호스팅하는 TabPanel -->
+                                <TabPanel x:Name="HeaderPanel"
                                       Background="#1F2937"
                                       IsItemsHost="True"
                                       Margin="0"
                                       KeyboardNavigation.TabIndex="1"
                                       Panel.ZIndex="1"/>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <!-- 탭 아이템(버튼) 스타일 -->
-        <Style x:Key="TabItemButtonStyle" TargetType="TabItem">
-            <Setter Property="Foreground" Value="LightGray"/>
-            <Setter Property="Background" Value="#1F2937"/>
-            <Setter Property="Width" Value="75"/>
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border x:Name="BorderElement"
+            <!-- 탭 아이템(버튼) 스타일 -->
+            <Style x:Key="TabItemButtonStyle" TargetType="TabItem">
+                <Setter Property="Foreground" Value="LightGray"/>
+                <Setter Property="Background" Value="#1F2937"/>
+                <Setter Property="Width" Value="75"/>
+                <Setter Property="Height" Value="60"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabItem">
+                            <Border x:Name="BorderElement"
                                 Background="{TemplateBinding Background}"
                                 Padding="0"
                                 BorderThickness="3,0,0,0">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <!-- 아이콘 표시 영역 -->
-                                <Border x:Name="IconBorder"
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <!-- 아이콘 표시 영역 -->
+                                    <Border x:Name="IconBorder"
                                         Width="40" Height="40"
                                         CornerRadius="16"
                                         Background="Transparent">
-                                    <ContentPresenter Content="{TemplateBinding Tag}"
+                                        <ContentPresenter Content="{TemplateBinding Tag}"
                                                       HorizontalAlignment="Center"
                                                       VerticalAlignment="Center"/>
-                                </Border>
-                                <!-- 텍스트 표시 영역 -->
-                                <TextBlock Text="{TemplateBinding Header}" 
+                                    </Border>
+                                    <!-- 텍스트 표시 영역 -->
+                                    <TextBlock Text="{TemplateBinding Header}" 
                                            FontSize="13"
                                            Margin="0"
                                            HorizontalAlignment="Center"
                                            Foreground="{TemplateBinding Foreground}"/>
-                            </StackPanel>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <!-- 선택된 상태 -->
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="BorderElement" Property="Background" Value="#374151"/>
-                                <Setter TargetName="BorderElement" Property="BorderBrush" Value="#4681DB"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                            <!-- 마우스 오버 상태 -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="BorderElement" Property="Background" Value="#2D3748"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!-- 선택된 상태 -->
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="BorderElement" Property="Background" Value="#374151"/>
+                                    <Setter TargetName="BorderElement" Property="BorderBrush" Value="#4681DB"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                                <!-- 마우스 오버 상태 -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="BorderElement" Property="Background" Value="#2D3748"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <!-- 서버 주소 입력 TextEdit 스타일 -->
-        <Style x:Key="ServerAddressTextEditStyle" TargetType="dxe:TextEdit">
-            <!-- 기본 속성 설정 -->
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderBrush" Value="#E0E0E0"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <!-- 서버 주소 입력 TextEdit 스타일 -->
+            <Style x:Key="ServerAddressTextEditStyle" TargetType="dxe:TextEdit">
+                <!-- 기본 속성 설정 -->
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="BorderBrush" Value="#E0E0E0"/>
+                <Setter Property="BorderThickness" Value="1"/>
 
-            <!-- ControlTemplate 재정의 -->
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="dxe:TextEdit">
-                        <Grid>
-                            <!-- 전체 배경 및 테두리 -->
-                            <Border x:Name="Border"
+                <!-- ControlTemplate 재정의 -->
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="dxe:TextEdit">
+                            <Grid>
+                                <!-- 전체 배경 및 테두리 -->
+                                <Border x:Name="Border"
                                     CornerRadius="3"
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}">
-                                <Grid>
-                                    <!-- 실제 입력 영역 -->
-                                    <TextBox x:Name="PART_Editor"
+                                    <Grid>
+                                        <!-- 실제 입력 영역 -->
+                                        <TextBox x:Name="PART_Editor"
                                              Text="{Binding EditValue, RelativeSource={RelativeSource TemplatedParent}, 
                                                     Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              Background="Transparent"
@@ -126,327 +131,328 @@
                                              VerticalContentAlignment="Center"
                                              Margin="3,3,25,3" />
 
-                                    <!-- 플레이스홀더 -->
-                                    <TextBlock x:Name="NullTextBlock"
+                                        <!-- 플레이스홀더 -->
+                                        <TextBlock x:Name="NullTextBlock"
                                                Text="{TemplateBinding NullText}"
                                                Foreground="Gray"
                                                Margin="3,3,25,3"
                                                VerticalAlignment="Center"
                                                IsHitTestVisible="False"
                                                Visibility="Collapsed"/>
-                                </Grid>
-                            </Border>
+                                    </Grid>
+                                </Border>
 
-                            <!-- 상태별로 표시할 아이콘 (기본은 숨김) -->
-                            <Image x:Name="StatusIcon"
+                                <!-- 상태별로 표시할 아이콘 (기본은 숨김) -->
+                                <Image x:Name="StatusIcon"
                                     Width="16" Height="16"
                                     Margin="0,0,5,0"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     Visibility="Collapsed"/>
-                        </Grid>
+                            </Grid>
 
-                        <!-- 템플릿 내부 상태 트리거 -->
-                        <ControlTemplate.Triggers>
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding Text, ElementName=PART_Editor}" Value="" />
-                                    <Condition Binding="{Binding IsFocused, ElementName=PART_Editor}" Value="False" />
-                                </MultiDataTrigger.Conditions>
-                                <Setter TargetName="NullTextBlock" Property="Visibility" Value="Visible" />
-                            </MultiDataTrigger>
+                            <!-- 템플릿 내부 상태 트리거 -->
+                            <ControlTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Text, ElementName=PART_Editor}" Value="" />
+                                        <Condition Binding="{Binding IsFocused, ElementName=PART_Editor}" Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="NullTextBlock" Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger>
 
-                            <!-- 연결 성공 시 아이콘 표시 -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}"
+                                <!-- 연결 성공 시 아이콘 표시 -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}"
                                          Value="{x:Static viewModels:ConnectionStatus.Connected}">
-                                <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="StatusIcon" Property="Source"
+                                    <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="StatusIcon" Property="Source"
                                         Value="/Assets/icon_connect_success.png"/>
-                            </DataTrigger>
+                                </DataTrigger>
 
-                            <!-- 오류 발생 (Init_Error 포함) -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}"
+                                <!-- 오류 발생 (Init_Error 포함) -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}"
                                          Value="{x:Static viewModels:ConnectionStatus.Error}">
-                                <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="StatusIcon" Property="Source"
+                                    <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="StatusIcon" Property="Source"
                                         Value="/Assets/icon_connect_fail.png"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ConnectionStatus}"
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}"
                                          Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
-                                <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
-                                <Setter TargetName="StatusIcon" Property="Source"
+                                    <Setter TargetName="StatusIcon" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="StatusIcon" Property="Source"
                                         Value="/Assets/icon_connect_fail.png"/>
-                            </DataTrigger>
+                                </DataTrigger>
 
-                            <!-- 연결 중, Idle 등에서는 아이콘 숨김 -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}"
+                                <!-- 연결 중, Idle 등에서는 아이콘 숨김 -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}"
                                          Value="{x:Static viewModels:ConnectionStatus.Connecting}">
-                                <Setter TargetName="StatusIcon" Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ConnectionStatus}"
+                                    <Setter TargetName="StatusIcon" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}"
                                          Value="{x:Static viewModels:ConnectionStatus.Idle}">
-                                <Setter TargetName="StatusIcon" Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
+                                    <Setter TargetName="StatusIcon" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
 
-                            <!-- Idle 상태: 수정 가능 -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <!-- Idle 상태: 수정 가능 -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                          Value="{x:Static viewModels:ConnectionStatus.Idle}">
-                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="False"/>
-                            </DataTrigger>
+                                    <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
 
-                            <!-- Init_Error 상태: 수정 가능 -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <!-- Init_Error 상태: 수정 가능 -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                          Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
-                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="False"/>
-                            </DataTrigger>
+                                    <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="False"/>
+                                </DataTrigger>
 
-                            <!-- 그 외 상태(Connecting, Connected, Error): 수정 불가 -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <!-- 그 외 상태(Connecting, Connected, Error): 수정 불가 -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                          Value="{x:Static viewModels:ConnectionStatus.Connected}">
-                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                    <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                          Value="{x:Static viewModels:ConnectionStatus.Connecting}">
-                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                    <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                          Value="{x:Static viewModels:ConnectionStatus.Error}">
-                                <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
-                            </DataTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+                                    <Setter TargetName="PART_Editor" Property="IsReadOnly" Value="True"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
 
-            <!-- 스타일 트리거로 Border 색상 및 입력 가능 여부 변경 -->
-            <Style.Triggers>
-                <!-- 연결 중 -->
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+                <!-- 스타일 트리거로 Border 색상 및 입력 가능 여부 변경 -->
+                <Style.Triggers>
+                    <!-- 연결 중 -->
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Connecting}">
-                    <Setter Property="BorderBrush" Value="Gray"/>
-                    <Setter Property="BorderThickness" Value="3,1,1,1"/>
-                    <Setter Property="IsEnabled" Value="True"/>
-                </DataTrigger>
+                        <Setter Property="BorderBrush" Value="Gray"/>
+                        <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                        <Setter Property="IsEnabled" Value="True"/>
+                    </DataTrigger>
 
-                <!-- 연결 성공 -->
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+                    <!-- 연결 성공 -->
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Connected}">
-                    <Setter Property="BorderBrush" Value="Green"/>
-                    <Setter Property="BorderThickness" Value="3,1,1,1"/>
-                    <Setter Property="IsEnabled" Value="False"/>
-                </DataTrigger>
+                        <Setter Property="BorderBrush" Value="Green"/>
+                        <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
 
-                <!-- 오류 발생 -->
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+                    <!-- 오류 발생 -->
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
-                    <Setter Property="BorderBrush" Value="Red"/>
-                    <Setter Property="BorderThickness" Value="3,1,1,1"/>
-                    <Setter Property="IsEnabled" Value="True"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+                        <Setter Property="BorderBrush" Value="Red"/>
+                        <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                        <Setter Property="IsEnabled" Value="True"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Error}">
-                    <Setter Property="BorderBrush" Value="Red"/>
-                    <Setter Property="BorderThickness" Value="3,1,1,1"/>
-                    <Setter Property="IsEnabled" Value="True"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+                        <Setter Property="BorderBrush" Value="Red"/>
+                        <Setter Property="BorderThickness" Value="3,1,1,1"/>
+                        <Setter Property="IsEnabled" Value="True"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
-        <!-- 서버 연결 안내 텍스트 스타일 -->
-        <Style x:Key="ServerStatusInstructionTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="Gray"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Style.Triggers>
-                <!-- 연결 중/성공 시 회색 -->
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+            <!-- 서버 연결 안내 텍스트 스타일 -->
+            <Style x:Key="ServerStatusInstructionTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Style.Triggers>
+                    <!-- 연결 중/성공 시 회색 -->
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Connecting}">
-                    <Setter Property="Foreground" Value="Gray"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+                        <Setter Property="Foreground" Value="Gray"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Connected}">
-                    <Setter Property="Foreground" Value="Gray"/>
-                </DataTrigger>
-                <!-- 오류 시 빨간색 -->
-                <DataTrigger Binding="{Binding ConnectionStatus}"
+                        <Setter Property="Foreground" Value="Gray"/>
+                    </DataTrigger>
+                    <!-- 오류 시 빨간색 -->
+                    <DataTrigger Binding="{Binding ConnectionStatus}"
                              Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
-                    <Setter Property="Foreground" Value="Red"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ConnectionStatus}" 
+                        <Setter Property="Foreground" Value="Red"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding ConnectionStatus}" 
                              Value="{x:Static viewModels:ConnectionStatus.Error}">
-                    <Setter Property="Foreground" Value="Red"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+                        <Setter Property="Foreground" Value="Red"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
-        <!-- 서버 연결/중단 버튼 스타일 -->
-        <Style x:Key="ConnectButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Background" Value="#135DB5"/>
-            <Setter Property="BorderBrush" Value="#135DB5"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="ButtonBorder"
+            <!-- 서버 연결/중단 버튼 스타일 -->
+            <Style x:Key="ConnectButtonStyle" TargetType="Button">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="12,6"/>
+                <Setter Property="Background" Value="#135DB5"/>
+                <Setter Property="BorderBrush" Value="#135DB5"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="ButtonBorder"
                         Background="{TemplateBinding Background}"
                         CornerRadius="3"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
 
-                            <!-- ConnectionStatus 상태별 트리거 -->
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <!-- ConnectionStatus 상태별 트리거 -->
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ConnectionStatus.Idle}">
-                                <Setter Property="Background" Value="#135DB5"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
-                            </DataTrigger>
+                                    <Setter Property="Background" Value="#135DB5"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
+                                </DataTrigger>
 
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ConnectionStatus.Connecting}">
-                                <Setter Property="Background" Value="#135DB5"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="IsEnabled" Value="False"/>
-                                <Setter Property="Content">
-                                    <Setter.Value>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                            <Grid Width="20" Height="20" Margin="0,0,5,0">
-                                                <Ellipse Stroke="#4681DB" StrokeThickness="3"/>
-                                                <Ellipse Stroke="White" StrokeThickness="3" StrokeDashArray="12 10">
-                                                    <Ellipse.RenderTransform>
-                                                        <RotateTransform CenterX="10" CenterY="10"/>
-                                                    </Ellipse.RenderTransform>
-                                                    <Ellipse.Triggers>
-                                                        <EventTrigger RoutedEvent="Loaded">
-                                                            <BeginStoryboard>
-                                                                <Storyboard RepeatBehavior="Forever">
-                                                                    <DoubleAnimation 
+                                    <Setter Property="Background" Value="#135DB5"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Grid Width="20" Height="20" Margin="0,0,5,0">
+                                                    <Ellipse Stroke="#4681DB" StrokeThickness="3"/>
+                                                    <Ellipse Stroke="White" StrokeThickness="3" StrokeDashArray="12 10">
+                                                        <Ellipse.RenderTransform>
+                                                            <RotateTransform CenterX="10" CenterY="10"/>
+                                                        </Ellipse.RenderTransform>
+                                                        <Ellipse.Triggers>
+                                                            <EventTrigger RoutedEvent="Loaded">
+                                                                <BeginStoryboard>
+                                                                    <Storyboard RepeatBehavior="Forever">
+                                                                        <DoubleAnimation 
                                                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(RotateTransform.Angle)"
                                                                 From="0" To="360"
                                                                 Duration="0:0:1" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </EventTrigger>
-                                                    </Ellipse.Triggers>
-                                                </Ellipse>
-                                            </Grid>
-                                            <TextBlock Text="{x:Static properties:Resources.Button_Connect}" 
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </EventTrigger>
+                                                        </Ellipse.Triggers>
+                                                    </Ellipse>
+                                                </Grid>
+                                                <TextBlock Text="{x:Static properties:Resources.Button_Connect}" 
                                                VerticalAlignment="Center" Foreground="White"/>
-                                        </StackPanel>
-                                    </Setter.Value>
-                                </Setter>
-                            </DataTrigger>
+                                            </StackPanel>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
 
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ConnectionStatus.Connected}">
-                                <Setter Property="Background" Value="#135DB5"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
-                            </DataTrigger>
+                                    <Setter Property="Background" Value="#135DB5"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
+                                </DataTrigger>
 
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ConnectionStatus.Init_Error}">
-                                <Setter Property="Background" Value="#135DB5"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
-                            </DataTrigger>
+                                    <Setter Property="Background" Value="#135DB5"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Content" Value="{x:Static properties:Resources.Button_Connect}"/>
+                                </DataTrigger>
 
-                            <DataTrigger Binding="{Binding ConnectionStatus}" 
+                                <DataTrigger Binding="{Binding ConnectionStatus}" 
                                  Value="{x:Static viewModels:ConnectionStatus.Error}">
-                                <Setter Property="Background" Value="#D42A34"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
-                            </DataTrigger>
+                                    <Setter Property="Background" Value="#D42A34"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Content" Value="{x:Static properties:Resources.Button_Stop}"/>
+                                </DataTrigger>
 
-                            <!-- 일반 Hover 상태 -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#1A6DD5"/>
-                            </Trigger>
+                                <!-- 일반 Hover 상태 -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#1A6DD5"/>
+                                </Trigger>
 
-                            <!-- 일반 Pressed 상태 -->
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#104A8C"/>
-                            </Trigger>
+                                <!-- 일반 Pressed 상태 -->
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#104A8C"/>
+                                </Trigger>
 
-                            <!-- Error 상태 + Hover -->
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding ConnectionStatus}" 
+                                <!-- Error 상태 + Hover -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ConnectionStatus}" 
                                        Value="{x:Static viewModels:ConnectionStatus.Error}"/>
-                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
-                                </MultiDataTrigger.Conditions>
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E05C5C"/>
-                            </MultiDataTrigger>
+                                        <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#E05C5C"/>
+                                </MultiDataTrigger>
 
-                            <!-- Error 상태 + Pressed -->
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding ConnectionStatus}" 
+                                <!-- Error 상태 + Pressed -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ConnectionStatus}" 
                                        Value="{x:Static viewModels:ConnectionStatus.Error}"/>
-                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True"/>
-                                </MultiDataTrigger.Conditions>
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#B02A2A"/>
-                            </MultiDataTrigger>
+                                        <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#B02A2A"/>
+                                </MultiDataTrigger>
 
-                            <!-- Error 상태 + Disabled -->
-                            <MultiDataTrigger>
-                                <MultiDataTrigger.Conditions>
-                                    <Condition Binding="{Binding ConnectionStatus}" 
+                                <!-- Error 상태 + Disabled -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding ConnectionStatus}" 
                                        Value="{x:Static viewModels:ConnectionStatus.Error}"/>
-                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="False"/>
-                                </MultiDataTrigger.Conditions>
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F1A1A1"/>
-                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#F1A1A1"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </MultiDataTrigger>
+                                        <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="False"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="ButtonBorder" Property="Background" Value="#F1A1A1"/>
+                                    <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#F1A1A1"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </MultiDataTrigger>
 
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
-        <!-- 적용 버튼 스타일 -->
-        <Style x:Key="ApplyButtonStyle" TargetType="Button">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Background" Value="#135DB5"/>
-            <Setter Property="BorderBrush" Value="#135DB5"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="ApplyButtonBorder"
+            <!-- 적용 버튼 스타일 -->
+            <Style x:Key="ApplyButtonStyle" TargetType="Button">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Padding" Value="12,6"/>
+                <Setter Property="Background" Value="#135DB5"/>
+                <Setter Property="BorderBrush" Value="#135DB5"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="ApplyButtonBorder"
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="3"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <!-- 마우스 오버 시 -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#3D82D9"/>
-                            </Trigger>
-                            <!-- 버튼 클릭 시 -->
-                            <Trigger Property="IsPressed" Value="True" >
-                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#0E4C91"/>
-                            </Trigger>
-                            <!-- 비활성화 상태 -->
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#EBF2FA"/>
-                                <Setter Property="Foreground" Value="#A9C4D8"></Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <!-- 마우스 오버 시 -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#3D82D9"/>
+                                </Trigger>
+                                <!-- 버튼 클릭 시 -->
+                                <Trigger Property="IsPressed" Value="True" >
+                                    <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#0E4C91"/>
+                                </Trigger>
+                                <!-- 비활성화 상태 -->
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="ApplyButtonBorder" Property="Background" Value="#EBF2FA"/>
+                                    <Setter Property="Foreground" Value="#A9C4D8"></Setter>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
     <!-- ========================================================= -->
     <!--                        윈도우 레이아웃                      -->
@@ -462,7 +468,7 @@
         <!-- (1) 커스텀 타이틀 바 -->
         <Border x:Name="TitleBar" 
                 CornerRadius="5,5,0,0"
-                Background="#1E62B5"
+                Background="#4681db"
                 Grid.Row="0"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
@@ -512,7 +518,7 @@
         </Border>
 
         <!-- (2) 메인 콘텐츠 영역 -->
-        <Grid Grid.Row="1" Background="LightGray">
+        <Grid Grid.Row="1" Background="#1F2937">
             <Grid.ColumnDefinitions>
                 <!-- 탭 헤더 영역 -->
                 <ColumnDefinition Width="75"/>
@@ -523,12 +529,13 @@
             <!-- (A) 탭 헤더 영역: TabControl 사용 -->
             <TabControl x:Name="MyTabControl"
                         Style="{StaticResource TabControlHeaderStyle}"
-                        Background="#1F2937">
-                <!-- Home 탭 -->
+                        Background="#1F2937"
+                        Margin="0,15,0,0">
+                <!-- Home 탭 --> 
                 <TabItem Header="{x:Static properties:Resources.Tab_Home}" 
                          Style="{StaticResource TabItemButtonStyle}">
                     <TabItem.Tag>
-                        <Image Source="/Assets/tab_home.png" Width="24" Height="24"/>
+                        <Image Source="{StaticResource Home_icon_24}" Width="24" Height="24"/>
                     </TabItem.Tag>
                     <!-- Home 탭 콘텐츠 -->
                     <TabItem.Content>
@@ -608,7 +615,7 @@
                 <TabItem Header="{x:Static properties:Resources.Tab_Info}" 
                          Style="{StaticResource TabItemButtonStyle}">
                     <TabItem.Tag>
-                        <Image Source="/Assets/tab_info.png" Width="24" Height="24"/>
+                        <Image Source="{StaticResource info_icon_24}" Width="24" Height="24"/>
                     </TabItem.Tag>
                     <!-- Info 탭 콘텐츠 -->
                     <TabItem.Content>
@@ -646,7 +653,7 @@
                 <TabItem Header="{x:Static properties:Resources.Tab_Settings}" 
                          Style="{StaticResource TabItemButtonStyle}">
                     <TabItem.Tag>
-                        <Image Source="/Assets/tab_settings.png" Width="24" Height="24"/>
+                        <Image Source="{StaticResource setting_icon_24}" Width="24" Height="24"/>
                     </TabItem.Tag>
                     <!-- Settings 탭 콘텐츠 -->
                     <TabItem.Content>

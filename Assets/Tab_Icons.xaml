@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"  
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">  
+
+    <DrawingImage x:Key="Home_icon_24">  
+        <DrawingImage.Drawing>  
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">  
+                <GeometryDrawing Brush="#03FFFFFF">  
+                    <GeometryDrawing.Geometry>  
+                        <RectangleGeometry Rect="0,0,24,24"/>  
+                    </GeometryDrawing.Geometry>  
+                </GeometryDrawing>  
+                <GeometryDrawing Geometry="M3 11L12 3L21 11">  
+                    <GeometryDrawing.Pen>  
+                        <Pen Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" Brush="#C4C6D0"/>  
+                    </GeometryDrawing.Pen>  
+                </GeometryDrawing>  
+                <GeometryDrawing Geometry="M5 9V20H19V9">  
+                    <GeometryDrawing.Pen>  
+                        <Pen Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" Brush="#C4C6D0"/>  
+                    </GeometryDrawing.Pen>  
+                </GeometryDrawing>  
+            </DrawingGroup>  
+        </DrawingImage.Drawing>  
+    </DrawingImage>  
+
+    <DrawingImage x:Key="setting_icon_24">  
+        <DrawingImage.Drawing>  
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">  
+                <GeometryDrawing Brush="#03FFFFFF">  
+                    <GeometryDrawing.Geometry>  
+                        <RectangleGeometry Rect="0,0,24,24"/>  
+                    </GeometryDrawing.Geometry>  
+                </GeometryDrawing>  
+                <GeometryDrawing Geometry="M11.09 22C10.18 22 9.45003 21.32 9.45003 20.47V19.03L9.33003 18.99C8.42003 18.69 7.57003 18.23 6.82003 17.64L6.72003 17.56L5.37003 18.28C5.12003 18.41 4.84003 18.48 4.55003 18.48C3.96003 18.48 3.42003 18.19 3.13003 17.72L2.22003 16.25C1.77003 15.52 2.04003 14.59 2.82003 14.17L4.14003 13.46L4.12003 13.34C4.02003 12.84 3.97003 12.4 3.97003 11.98C3.97003 11.56 4.02003 11.12 4.12003 10.62L4.14003 10.5L2.82003 9.78999C2.04003 9.36999 1.77003 8.42999 2.22003 7.70999L3.13003 6.23999C3.42003 5.76999 3.97003 5.47999 4.55003 5.47999C4.84003 5.47999 5.12003 5.54999 5.37003 5.67999L6.72003 6.39999L6.82003 6.31999C7.57003 5.72999 8.41003 5.26999 9.33003 4.96999L9.45003 4.92999V3.48999C9.45003 2.64999 10.19 1.95999 11.09 1.95999H12.91C13.82 1.95999 14.55 2.63999 14.55 3.48999V4.92999L14.67 4.96999C15.58 5.26999 16.43 5.72999 17.18 6.31999L17.28 6.39999L18.63 5.67999C18.88 5.54999 19.16 5.47999 19.45 5.47999C20.04 5.47999 20.58 5.76999 20.87 6.23999L21.78 7.70999C22.23 8.43999 21.96 9.36999 21.18 9.78999L19.86 10.5L19.88 10.62C19.98 11.12 20.03 11.56 20.03 11.98C20.03 12.4 19.98 12.84 19.88 13.34L19.86 13.46L21.18 14.17C21.96 14.59 22.23 15.53 21.78 16.25L20.87 17.72C20.58 18.19 20.03 18.48 19.45 18.48C19.16 18.48 18.88 18.41 18.63 18.28L17.28 17.56L17.18 17.64C16.43 18.23 15.59 18.69 14.67 18.99L14.55 19.03V20.47C14.55 21.31 13.81 22 12.91 22H11.09Z">  
+                    <GeometryDrawing.Pen>  
+                        <Pen Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" Brush="#C4C6D0"/>  
+                    </GeometryDrawing.Pen>  
+                </GeometryDrawing>  
+                <GeometryDrawing Geometry="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z">  
+                    <GeometryDrawing.Pen>  
+                        <Pen Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" Brush="#C4C6D0"/>  
+                    </GeometryDrawing.Pen>  
+                </GeometryDrawing>  
+            </DrawingGroup>  
+        </DrawingImage.Drawing>  
+    </DrawingImage>  
+
+    <DrawingImage x:Key="info_icon_24">  
+        <DrawingImage.Drawing>  
+            <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">  
+                <GeometryDrawing Brush="#03FFFFFF">  
+                    <GeometryDrawing.Geometry>  
+                        <RectangleGeometry Rect="0,0,24,24"/>  
+                    </GeometryDrawing.Geometry>  
+                </GeometryDrawing>  
+                <GeometryDrawing Brush="#C4C6D0" Geometry="M12 8.5C12.8284 8.5 13.5 7.82843 13.5 7C13.5 6.17157 12.8284 5.5 12 5.5C11.1716 5.5 10.5 6.17157 10.5 7C10.5 7.82843 11.1716 8.5 12 8.5Z"/>  
+                <GeometryDrawing Geometry="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z">  
+                    <GeometryDrawing.Pen>  
+                        <Pen Thickness="2" StartLineCap="Round" EndLineCap="Round" LineJoin="Round" Brush="#C4C6D0"/>  
+                    </GeometryDrawing.Pen>  
+                </GeometryDrawing>  
+                <GeometryDrawing Brush="#C4C6D0" Geometry="M13 10H11V18H13V10Z"/>  
+            </DrawingGroup>  
+        </DrawingImage.Drawing>  
+    </DrawingImage>  
+</ResourceDictionary>
