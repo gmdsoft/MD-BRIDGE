@@ -163,7 +163,7 @@ namespace MD.BRIDGE.ViewModels
             SelectedLanguage = SettingService.GetCultureInfo().Name;
             _originalLanguage = SelectedLanguage; // 처음 불러온 언어 저장
 
-            FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
+            FooterServerStatusText = Resources.Footer_ServerStatus_Idle;
 
             // 빌드 버전 정보
             FileVersionInfo buildVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
@@ -195,24 +195,24 @@ namespace MD.BRIDGE.ViewModels
             ResetCancellationToken();
             await StopBridgeServiceAsync();
 
-            SetState(ConnectionStatus.Connecting);
+            SetConnectionStatus(ConnectionStatus.Connecting);
             var isHealthy = await CheckServerHealth();
 
             if (isHealthy)
             {
                 await Task.Delay(TimeSpan.FromSeconds(value: 0.3));
                 _ = _bridgeService.RunAsync();
-                SetState(ConnectionStatus.Connected);
+                SetConnectionStatus(ConnectionStatus.Connected);
             }
             else
             {
                 if (_isInit)
                 {
-                    SetState(ConnectionStatus.Init_Error);
+                    SetConnectionStatus(ConnectionStatus.Init_Error);
                 }
                 else
                 {
-                    SetState(ConnectionStatus.Error);
+                    SetConnectionStatus(ConnectionStatus.Error);
                 }
             }
         }
@@ -231,11 +231,11 @@ namespace MD.BRIDGE.ViewModels
 
                         if (!isHealthy)
                         {
-                            SetState(ConnectionStatus.Error);
+                            SetConnectionStatus(ConnectionStatus.Error);
                             StopBridgeService();
                         }
 
-                        RefreshUpdateAvailabilityStatus();
+                        UpdateTrayIconAndMessagesByStatus();
                     }
                 }
             }
@@ -298,11 +298,8 @@ namespace MD.BRIDGE.ViewModels
             }
 
             // 최신 버전 갱신
-            if (result.Value.LatestVersion != null)
-            {
-                _latestVersion = result.Value.LatestVersion;
-                _latestVersionFileId = result.Value.FileId;
-            }
+            _latestVersion = result.Value.LatestVersion;
+            _latestVersionFileId = result.Value.FileId;
 
             return true;
         }
@@ -318,7 +315,7 @@ namespace MD.BRIDGE.ViewModels
             Logger.Debug("Cancel and dispose CancellationTokenSource.");
         }
 
-        private bool HasUpdataVersion()
+        private bool IsUpdatable()
         {
             if (string.IsNullOrWhiteSpace(_latestVersion) || string.IsNullOrWhiteSpace(_latestVersionFileId))
             {
@@ -335,38 +332,86 @@ namespace MD.BRIDGE.ViewModels
             }
             catch (ArgumentException)
             {
-                // 문자열 포맷이 잘못되었거나 빈 값일 때
                 return false;
             }
             catch (OverflowException)
             {
-                // 버전 숫자가 너무 커서 파싱 불가할 때
                 return false;
             }
         }
 
-        private void RefreshUpdateAvailabilityStatus()
+        private void UpdateTrayIconAndMessagesByStatus()
         {
-            if (HasUpdataVersion())
+            // 상태에 따른 업데이트 가능 여부 설정
+            if (IsUpdatable())
             {
-                UpdateAvailabilityStatus = ConnectionStatus == ConnectionStatus.Connected ? UpdateAvailabilityStatus.ReadyToUpdate : UpdateAvailabilityStatus.Blocked;
+                UpdateAvailabilityStatus = ConnectionStatus == ConnectionStatus.Connected
+                    ? UpdateAvailabilityStatus.ReadyToUpdate  // 업데이트 가능
+                    : UpdateAvailabilityStatus.Blocked; // 업데이트 불가
             }
             else
             {
+                // 업데이트가 필요하지 않거나, 서버에 연결되지 않은 경우
                 UpdateAvailabilityStatus = UpdateAvailabilityStatus.UpToDate;
             }
 
-            if (UpdateAvailabilityStatus == UpdateAvailabilityStatus.ReadyToUpdate)
+            // 상태에 따른 아이콘 및 메시지 업데이트
+            if (ConnectionStatus == ConnectionStatus.Connected)
             {
-                _taskbarIconService.SetTrayIcon("Assets/tray_updatable.png");
+                if (UpdateAvailabilityStatus == UpdateAvailabilityStatus.ReadyToUpdate)
+                {
+                    _taskbarIconService.SetTrayIcon("Assets/tray_updatable.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_UpdatableMessage);
+                }
+                else
+                {
+                    _taskbarIconService.SetTrayIcon("Assets/tray_connected.png");
+                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectedMessage);
+                }
+
+                ConnectionStatusDetailText = Resources.Inline_Connection_DefaultMessage;
+                FooterServerStatusText = Resources.Footer_ServerStatus_Connected;
             }
+            else if (ConnectionStatus == ConnectionStatus.Error || ConnectionStatus == ConnectionStatus.Init_Error)
+            {
+                _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
+                _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
+                ConnectionStatusDetailText = Resources.Inline_Connection_ErrorMessage;
+                FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
+            }
+            else if (ConnectionStatus == ConnectionStatus.Idle)
+            {
+                _taskbarIconService.SetTrayIcon("Assets/tray_idle.png");
+                _taskbarIconService.UpdateToolTipMessage(Resources.Tray_IdleMessage);
+                ConnectionStatusDetailText = Resources.Inline_Connection_IdleMessage;
+                FooterServerStatusText = Resources.Footer_ServerStatus_Idle;
+            }
+            else
+            {
+                _taskbarIconService.SetTrayIcon("Assets/tray_normal.png");
+                _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectingMessage);
+                ConnectionStatusDetailText = Resources.Inline_Connection_ConnectingMessage;
+                FooterServerStatusText = Resources.Footer_ServerStatus_Connecting;
+            }
+        }
+
+        private void SetConnectionStatus(ConnectionStatus status)
+        {
+            Logger.Info($"Setting state: {status}");
+            ConnectionStatus = status;
+
+            if (status == ConnectionStatus.Connected)
+            {
+                _isInit = false;
+            }
+
+            UpdateTrayIconAndMessagesByStatus();
         }
 
         #endregion
 
         #region Command Handlers
 
-        // Connect Button
         private void ExecuteConnectCommand()
         {
             Logger.Info($"New server address: {ServerAddress}");
@@ -375,11 +420,11 @@ namespace MD.BRIDGE.ViewModels
             if (ConnectionStatus == ConnectionStatus.Connected)
             {
                 StopBridgeService();
-                SetState(ConnectionStatus.Idle);
+                SetConnectionStatus(ConnectionStatus.Idle);
             }
             else if (ConnectionStatus == ConnectionStatus.Error)
             {
-                SetState(ConnectionStatus.Idle);
+                SetConnectionStatus(ConnectionStatus.Idle);
             }
             else
             {
@@ -450,71 +495,6 @@ namespace MD.BRIDGE.ViewModels
             // 현재 앱 정상 종료
             System.Windows.Application.Current.Shutdown();
         }
-
-        #endregion
-
-        #region Status Setter
-
-        private void SetState(ConnectionStatus status)
-        {
-            Logger.Info($"Setting state: {status}");
-            switch (status)
-            {
-                case ConnectionStatus.Idle:
-                    _taskbarIconService.SetTrayIcon("Assets/tray_waiting.png");
-                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_IdleMessage);
-
-                    ConnectionStatusDetailText = Resources.Inline_Connection_IdleMessage;
-                    FooterServerStatusText = Resources.Footer_ServerStatus_Waiting;
-
-                    ConnectionStatus = ConnectionStatus.Idle;
-                    break;
-
-                case ConnectionStatus.Connecting:
-                    _taskbarIconService.SetTrayIcon("Assets/tray_normal.png");
-                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectingMessage);
-
-                    ConnectionStatusDetailText = Resources.Inline_Connection_ConnectingMessage;
-                    FooterServerStatusText = Resources.Footer_ServerStatus_Connecting;
-
-                    ConnectionStatus = ConnectionStatus.Connecting;
-                    break;
-
-                case ConnectionStatus.Connected:
-                    _taskbarIconService.SetTrayIcon("Assets/tray_connected.png");
-                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectedMessage);
-
-                    ConnectionStatusDetailText = Resources.Inline_Connection_DefaultMessage;
-                    FooterServerStatusText = Resources.Footer_ServerStatus_Connected;
-
-                    ConnectionStatus = ConnectionStatus.Connected;
-                    _isInit = false;
-                    break;
-
-                case ConnectionStatus.Error:
-                    _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
-                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
-
-                    ConnectionStatusDetailText = Resources.Inline_Connection_ErrorMessage;
-                    FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
-
-                    ConnectionStatus = ConnectionStatus.Error;
-                    break;
-
-                case ConnectionStatus.Init_Error:
-                    _taskbarIconService.SetTrayIcon("Assets/tray_connect_error.png");
-                    _taskbarIconService.UpdateToolTipMessage(Resources.Tray_ConnectFailMessage);
-
-                    ConnectionStatusDetailText = Resources.Inline_Connection_initErrorMessage;
-                    FooterServerStatusText = Resources.Footer_ServerStatus_Failed;
-
-                    ConnectionStatus = ConnectionStatus.Init_Error;
-                    break;
-            }
-
-            RefreshUpdateAvailabilityStatus();
-        }
-
 
         #endregion
     }

@@ -168,7 +168,7 @@
     <Resource Include="Assets\tray_connected.png" />
     <Resource Include="Assets\tray_connect_error.png" />
     <Resource Include="Assets\tray_normal.png" />
-    <Resource Include="Assets\tray_waiting.png" />
+    <Resource Include="Assets\tray_idle.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Library\Modules\Log\LogModule\LogModule.csproj">

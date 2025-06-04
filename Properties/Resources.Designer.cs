@@ -106,15 +106,6 @@ namespace MD.BRIDGE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Latest version update required.
-        /// </summary>
-        public static string Footer_NeedUpdateMessage {
-            get {
-                return ResourceManager.GetString("Footer_NeedUpdateMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Connected.
         /// </summary>
         public static string Footer_ServerStatus_Connected {
@@ -144,9 +135,18 @@ namespace MD.BRIDGE.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Waiting.
         /// </summary>
-        public static string Footer_ServerStatus_Waiting {
+        public static string Footer_ServerStatus_Idle {
             get {
-                return ResourceManager.GetString("Footer_ServerStatus_Waiting", resourceCulture);
+                return ResourceManager.GetString("Footer_ServerStatus_Idle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest version update required.
+        /// </summary>
+        public static string Footer_UpdatableMessage {
+            get {
+                return ResourceManager.GetString("Footer_UpdatableMessage", resourceCulture);
             }
         }
         
@@ -382,6 +382,15 @@ namespace MD.BRIDGE.Properties {
         public static string Tray_IdleMessage {
             get {
                 return ResourceManager.GetString("Tray_IdleMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update to the latest version..
+        /// </summary>
+        public static string Tray_UpdatableMessage {
+            get {
+                return ResourceManager.GetString("Tray_UpdatableMessage", resourceCulture);
             }
         }
     }

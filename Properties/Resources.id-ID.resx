@@ -152,13 +152,13 @@
     <value>Anda harus memulai ulang program untuk mengubah bahasa.
 Apakah Anda ingin memulai ulang sekarang?</value>
   </data>
-  <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
+  <data name="Footer_ServerStatus_Idle" xml:space="preserve">
     <value>Menunggu</value>
   </data>
   <data name="MessageBox_Apply_Language_Title" xml:space="preserve">
     <value>Ubah Pengaturan</value>
   </data>
-  <data name="Footer_NeedUpdateMessage" xml:space="preserve">
+  <data name="Footer_UpdatableMessage" xml:space="preserve">
     <value>Perlu pemutakhiran versi terbaru</value>
   </data>
   <data name="Button_Download" xml:space="preserve">
@@ -166,5 +166,8 @@ Apakah Anda ingin memulai ulang sekarang?</value>
   </data>
   <data name="Footer_ConnectServerToDownloadMessage" xml:space="preserve">
     <value>Hubungkan ke server untuk diunduh</value>
+  </data>
+  <data name="Tray_UpdatableMessage" xml:space="preserve">
+    <value>Perbarui ke versi terbaru.</value>
   </data>
 </root>

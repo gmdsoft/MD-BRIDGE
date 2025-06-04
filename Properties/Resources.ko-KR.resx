@@ -195,7 +195,7 @@
   <data name="Footer_ServerStatus_Failed" xml:space="preserve">
     <value>연결 실패</value>
   </data>
-  <data name="Footer_ServerStatus_Waiting" xml:space="preserve">
+  <data name="Footer_ServerStatus_Idle" xml:space="preserve">
     <value>대기</value>
   </data>
   <data name="Input_Connection_DefaultServerAddress" xml:space="preserve">
@@ -217,7 +217,7 @@
   <data name="MessageBox_Apply_Language_Title" xml:space="preserve">
     <value>설정 변경</value>
   </data>
-  <data name="Footer_NeedUpdateMessage" xml:space="preserve">
+  <data name="Footer_UpdatableMessage" xml:space="preserve">
     <value>최신 버전 업데이트 필요</value>
   </data>
   <data name="Button_Download" xml:space="preserve">
@@ -225,5 +225,8 @@
   </data>
   <data name="Footer_ConnectServerToDownloadMessage" xml:space="preserve">
     <value>다운로드하려면 서버에 연결하세요</value>
+  </data>
+  <data name="Tray_UpdatableMessage" xml:space="preserve">
+    <value>최신 버전으로 업데이트하세요.</value>
   </data>
 </root>

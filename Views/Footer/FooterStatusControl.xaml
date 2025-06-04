@@ -107,7 +107,7 @@
                                     <Style.Triggers>
                                         <!-- 상위 버전 있고 서버 연결 완료 -->
                                         <DataTrigger Binding="{Binding UpdateAvailabilityStatus}" Value="ReadyToUpdate">
-                                            <Setter Property="Text" Value="{x:Static properties:Resources.Footer_NeedUpdateMessage}"/>
+                                            <Setter Property="Text" Value="{x:Static properties:Resources.Footer_UpdatableMessage}"/>
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                         <!-- 상위 버전 있고 서버 연결 안됨 -->
