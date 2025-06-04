@@ -1,9 +1,11 @@
 ﻿using MD.BRIDGE.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace MD.BRIDGE.Views
 {
@@ -32,10 +34,16 @@ namespace MD.BRIDGE.Views
         // 최대화 버튼
         private void MaximizeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.WindowState == WindowState.Normal)
-                this.WindowState = WindowState.Maximized;
+            if (WindowState == WindowState.Normal)
+            {
+                WindowState = WindowState.Maximized;
+                TitleBarMaximizeImage.Source = new BitmapImage(new Uri("/Assets/titlebar_normal.png", UriKind.Relative));
+            }
             else
-                this.WindowState = WindowState.Normal;
+            {
+                WindowState = WindowState.Normal;
+                TitleBarMaximizeImage.Source = new BitmapImage(new Uri("/Assets/titlebar_maximize.png", UriKind.Relative));
+            }
         }
 
         // 닫기 버튼
@@ -50,10 +58,7 @@ namespace MD.BRIDGE.Views
             if (e.ClickCount == 2)
             {
                 // 더블클릭: 최대화 <-> 복원
-                if (this.WindowState == WindowState.Maximized)
-                    this.WindowState = WindowState.Normal;
-                else
-                    this.WindowState = WindowState.Maximized;
+                MaximizeButton_Click(sender, e);
             }
             else
             {

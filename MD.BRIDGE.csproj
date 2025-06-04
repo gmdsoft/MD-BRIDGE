@@ -185,7 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\titlebar_close.png" />
-    <Resource Include="Assets\titlebar_maximize.png" />
+    <Resource Include="Assets\titlebar_normal.png" />
     <Resource Include="Assets\titlebar_minimize.png" />
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +213,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\footer_updatable.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\titlebar_maximize.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
