@@ -64,45 +64,59 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="TabItem">
-                            <Border x:Name="BorderElement"
-                                Background="{TemplateBinding Background}"
-                                Padding="0"
-                                BorderThickness="3,0,0,0">
-                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <!-- 아이콘 표시 영역 -->
-                                    <Border x:Name="IconBorder"
-                                        Width="40" Height="40"
-                                        CornerRadius="16"
-                                        Background="Transparent">
-                                        <ContentPresenter Content="{TemplateBinding Tag}"
-                                                      HorizontalAlignment="Center"
-                                                      VerticalAlignment="Center"/>
-                                    </Border>
-                                    <!-- 텍스트 표시 영역 -->
-                                    <TextBlock Text="{TemplateBinding Header}" 
-                                           FontSize="13"
-                                           Margin="0"
-                                           HorizontalAlignment="Center"
-                                           Foreground="{TemplateBinding Foreground}"/>
-                                </StackPanel>
-                            </Border>
+                            <Grid>
+                                <!-- 좌측 하늘색 선 영역 -->
+                                <Border x:Name="LeftHighlight"
+                                        Background="Transparent"
+                                        Width="3"
+                                        HorizontalAlignment="Left"/>
+
+                                <!-- 콘텐츠 영역 -->
+                                <Border x:Name="BorderElement"
+                                        Background="{TemplateBinding Background}"
+                                        Margin="3,0,0,0">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-3,0,0,0">
+                                        <!-- 아이콘 -->
+                                        <Border x:Name="IconBorder"
+                                                Width="24" Height="24"
+                                                CornerRadius="16"
+                                                Background="Transparent">
+                                            <ContentPresenter Content="{TemplateBinding Tag}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"/>
+                                        </Border>
+                                        <Border Height="5"/>
+                                        <!-- 텍스트 -->
+                                        <TextBlock Text="{TemplateBinding Header}" 
+                                                   FontSize="13"
+                                                   Margin="0"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{TemplateBinding Foreground}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
                             <ControlTemplate.Triggers>
                                 <!-- 선택된 상태 -->
                                 <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="LeftHighlight" Property="Background" Value="#4681DB"/>
                                     <Setter TargetName="BorderElement" Property="Background" Value="#374151"/>
-                                    <Setter TargetName="BorderElement" Property="BorderBrush" Value="#4681DB"/>
                                     <Setter Property="Foreground" Value="White"/>
                                 </Trigger>
-                                <!-- 마우스 오버 상태 -->
-                                <Trigger Property="IsMouseOver" Value="True">
+
+                                <!-- 마우스 오버 상태이면서 선택되지 않은 경우 -->
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True"/>
+                                        <Condition Property="IsSelected" Value="False"/>
+                                    </MultiTrigger.Conditions>
                                     <Setter TargetName="BorderElement" Property="Background" Value="#2D3748"/>
-                                </Trigger>
+                                    <Setter TargetName="LeftHighlight" Property="Background" Value="#2D3748"/>
+                                </MultiTrigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
-
             <!-- 서버 주소 입력 TextEdit 스타일 -->
             <Style x:Key="ServerAddressTextEditStyle" TargetType="dxe:TextEdit">
                 <!-- 기본 속성 설정 -->
